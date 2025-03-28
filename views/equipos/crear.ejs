@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Equipo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Gestión de Equipos</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/equipos">Inventario</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/asignaciones">Asignaciones</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/reparaciones">Reparaciones</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h2 class="text-center">Registrar Nuevo Equipo</h2>
+
+        <form action="/equipos/crear" method="POST" class="bg-white p-4 rounded shadow-sm">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Nombre del Equipo</label>
+                    <input type="text" name="nombre" class="form-control" required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Tipo</label>
+                    <select name="tipo" class="form-select" required>
+                        <option value="laptop">Laptop</option>
+                        <option value="desktop">Desktop</option>
+                        <option value="impresora">Impresora</option>
+                        <option value="servidor">Servidor</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Marca</label>
+                    <input type="text" name="marca" class="form-control" required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Modelo</label>
+                    <input type="text" name="modelo" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Número de Serie</label>
+                    <input type="text" name="numero_serie" class="form-control" required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Estado</label>
+                    <select name="estado" class="form-select">
+                        <option value="disponible">Disponible</option>
+                        <option value="asignado">Asignado</option>
+                        <option value="en_reparacion">En Reparación</option>
+                        <option value="dado_de_baja">Dado de Baja</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                <a href="/equipos" class="btn btn-secondary me-md-2">Cancelar</a>
+                <button type="submit" class="btn btn-success">Guardar Equipo</button>
+            </div>
+        </form>
+    </div>
+
+    <footer class="footer mt-5 py-3 bg-light">
+        <div class="container text-center">
+            <span class="text-muted">Sistema de Gestión de Equipos &copy; <%= new Date().getFullYear() %></span>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

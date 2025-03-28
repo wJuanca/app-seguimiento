@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <%- include('./partials/header.ejs') %>
+    <div class="container mt-4">
+        <div class="jumbotron bg-light p-5 rounded">
+            <h1 class="display-4 text-center">Sistema de Gestión de Equipos Informáticos</h1>
+            <p class="lead text-center">Administre fácilmente su inventario de equipos, asignaciones y reparaciones</p>
+            <hr class="my-4">
+            
+            <div class="row mt-5">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Inventario</h5>
+                            <p class="card-text">Gestione todos sus equipos informáticos</p>
+                            <a href="/equipos" class="btn btn-primary">Acceder</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Asignaciones</h5>
+                            <p class="card-text">Controle qué equipo está asignado a cada usuario</p>
+                            <a href="/asignaciones" class="btn btn-primary">Acceder</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Reparaciones</h5>
+                            <p class="card-text">Seguimiento de mantenimientos y reparaciones</p>
+                            <a href="/reparaciones" class="btn btn-primary">Acceder</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

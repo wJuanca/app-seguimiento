@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario de Equipos</title>
+    <!-- Bootstrap 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="bg-light">
+    <%- include('../partials/header.ejs') %>
+    
+    <div class="container-fluid px-4 py-4">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="mb-4 text-center display-6 text-primary">Inventario de Equipos</h2>
+                
+                <!-- Filtros Card -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">Filtros de Búsqueda</h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="/equipos" method="GET">
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <label class="form-label">Buscar</label>
+                                    <input type="text" name="busqueda" class="form-control" placeholder="Nombre/Modelo/Serie" value="<%= filtros?.busqueda || '' %>">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Marca</label>
+                                    <select name="marca" class="form-select">
+                                        <option value="">Todas las marcas</option>
+                                        <% marcas.forEach(marca => { %>
+                                            <option value="<%= marca %>" <%= filtros?.marca === marca ? 'selected' : '' %>><%= marca %></option>
+                                        <% }) %>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Tipo</label>
+                                    <select name="tipo" class="form-select">
+                                        <option value="">Todos los tipos</option>
+                                        <option value="laptop" <%= filtros?.tipo === 'laptop' ? 'selected' : '' %>>Laptop</option>
+                                        <option value="desktop" <%= filtros?.tipo === 'desktop' ? 'selected' : '' %>>Desktop</option>
+                                        <option value="impresora" <%= filtros?.tipo === 'impresora' ? 'selected' : '' %>>Impresora</option>
+                                        <option value="servidor" <%= filtros?.tipo === 'servidor' ? 'selected' : '' %>>Servidor</option>
+                                        <option value="otro" <%= filtros?.tipo === 'otro' ? 'selected' : '' %>>Otro</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Estado</label>
+                                    <select name="estado" class="form-select">
+                                        <option value="">Todos los estados</option>
+                                        <option value="disponible" <%= filtros?.estado === 'disponible' ? 'selected' : '' %>>Disponible</option>
+                                        <option value="asignado" <%= filtros?.estado === 'asignado' ? 'selected' : '' %>>Asignado</option>
+                                        <option value="en_reparacion" <%= filtros?.estado === 'en_reparacion' ? 'selected' : '' %>>En Reparación</option>
+                                        <option value="dado_de_baja" <%= filtros?.estado === 'dado_de_baja' ? 'selected' : '' %>>Dado de Baja</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end gap-2 mt-3">
+                                <a href="/equipos" class="btn btn-outline-secondary">Limpiar filtros</a>
+                                <button type="submit" class="btn btn-primary">Aplicar filtros</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Nuevo Equipo Button -->
+                <div class="d-flex justify-content-end mb-3">
+                    <a href="/equipos/crear" class="btn btn-success">
+                        <i class="bi bi-plus-circle me-2"></i>Nuevo Equipo
+                    </a>
+                </div>
+
+                <!-- Tabla de equipos -->
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover shadow-sm">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Tipo</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Número de Serie</th>
+                                <th>Estado</th>
+                                <th>Usuario Asignado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% equipos.forEach(equipo => { %>
+                                <tr>
+                                    <td><%= equipo.id_equipo %></td>
+                                    <td><%= equipo.nombre %></td>
+                                    <td><%= equipo.tipo %></td>
+                                    <td><%= equipo.marca %></td>
+                                    <td><%= equipo.modelo %></td>
+                                    <td><%= equipo.numero_serie %></td>
+                                    <td>
+                                        <span class="badge 
+                                            <%= 
+                                                equipo.estado === 'disponible' ? 'bg-success' : 
+                                                equipo.estado === 'asignado' ? 'bg-primary' : 
+                                                equipo.estado === 'en_reparacion' ? 'bg-warning' : 
+                                                'bg-danger' 
+                                            %>">
+                                            <%= equipo.estado %>
+                                        </span>
+                                    </td>
+                                    <td><%= equipo.usuario_actual || 'No asignado' %></td>
+                                    <td>
+                                        <div class="d-flex gap-2">
+                                            <a href="/equipos/editar/<%= equipo.id_equipo %>" class="btn btn-sm btn-outline-warning" title="Editar">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <button 
+                                                data-delete-equipo="<%= equipo.id_equipo %>" 
+                                                data-equipo-nombre="<%= equipo.nombre %>" 
+                                                class="btn btn-sm btn-outline-danger btn-delete" 
+                                                title="Eliminar"
+                                            >
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación de Eliminación -->
+    <div class="modal fade" id="confirmarEliminarModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Está seguro que desea eliminar el equipo <strong id="nombreEquipoEliminar"></strong>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmarEliminarBtn">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and Popper.js (Required for modal functionality) -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get modal elements
+            const deleteModal = new bootstrap.Modal(document.getElementById('confirmarEliminarModal'));
+            const nombreEquipoEliminar = document.getElementById('nombreEquipoEliminar');
+            const confirmarEliminarBtn = document.getElementById('confirmarEliminarBtn');
+            let equipoIdToDelete = null;
+
+            // Add click event to all delete buttons
+            document.querySelectorAll('.btn-delete').forEach(button => {
+                button.addEventListener('click', function() {
+                    // Get equipment ID and name from data attributes
+                    equipoIdToDelete = this.getAttribute('data-delete-equipo');
+                    const equipoNombre = this.getAttribute('data-equipo-nombre');
+
+                    // Set equipment name in modal
+                    nombreEquipoEliminar.textContent = equipoNombre;
+
+                    // Show modal
+                    deleteModal.show();
+                });
+            });
+
+            // Add click event to confirm delete button
+            confirmarEliminarBtn.addEventListener('click', function() {
+                if (equipoIdToDelete) {
+                    // Redirect to delete route or use fetch to delete
+                    window.location.href = `/equipos/eliminar/${equipoIdToDelete}`;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
