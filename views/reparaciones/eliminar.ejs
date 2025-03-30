@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Reparación</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../../styles/reparacionform.css">
+</head>
+<body>
+    <div class="form-container">
+        <h1>Eliminar Reparación</h1>
+        <form action="/deleteReparacion" method="post" class="formulario-reparacion">
+            <input type="hidden" name="id_reparacion" value="<%= reparacion.id_reparacion %>">
+
+            <div class="alado-group">
+                <div class="alado-item">
+                    <label for="equipo_id">ID Equipo</label>
+                    <input type="text" name="equipo_id" id="equipo_id" readonly value="<%= reparacion.equipo_id %>">        
+                </div>
+                <div class="alado-item">
+                    <label for="usuario_solicitante_id">ID Usuario Solicitante</label>
+                    <input type="text" name="usuario_solicitante_id" id="usuario_solicitante_id" readonly value="<%= reparacion.usuario_solicitante_id %>">        
+                </div>
+            </div>
+
+            <div class="alado-group">
+                <div class="alado-item">
+                    <label for="tecnico_id">ID Técnico</label>
+                    <input type="text" name="tecnico_id" id="tecnico_id" readonly value="<%= reparacion.tecnico_id %>">        
+                </div>
+                <div class="alado-item">
+                    <label for="estado">Estado</label>
+                    <input type="text" name="estado" id="estado" readonly value="<%= reparacion.estado %>">        
+                </div>
+            </div>
+
+            <label for="descripcion">Descripción</label>
+            <textarea name="descripcion" id="descripcion" readonly class="textarea-reparacion"><%- reparacion.descripcion_problema %></textarea>
+
+            <div class="alado-group">
+                <div class="alado-item">
+                    <label for="fecha_inicio">Fecha Inicio</label>
+                    <input type="date" name="fecha_inicio" id="fecha_inicio" readonly value="<%= new Date(reparacion.fecha_inicio).toISOString().split('T')[0] %>">
+                </div>
+                <div class="alado-item">
+                    <label for="fecha_finalizacion">Fecha Finaliza</label>
+                    <input type="date" name="fecha_finalizacion" id="fecha_finalizacion" readonly value="<%= new Date(reparacion.fecha_finalizacion).toISOString().split('T')[0] %>">
+                </div>
+            </div>
+
+            <button type="submit" style="background-color: #dc3545;">Eliminar Reparación</button>
+            <a href="/reparaciones" class="btn-volver"><i class="fa-solid fa-arrow-left"></i> Cancelar</a>
+        </form>
+    </div>
+</body>
+</html>

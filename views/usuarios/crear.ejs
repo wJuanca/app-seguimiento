@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crear Usuario</title>
+    <link rel="stylesheet" href="/css/create-form.css" />
+    <style>
+      /* Modern form styling for user creation */
+      :root {
+        --primary-color: #2563eb;
+        --primary-hover: #1d4ed8;
+        --secondary-color: #f8f9fa;
+        --text-color: #333;
+        --border-color: #ddd;
+        --error-color: #e63946;
+        --success-color: #10b981;
+        --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        --border-radius: 8px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: var(--text-color);
+        background-color: #f0f4f8;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+
+      /* Form container */
+      form {
+        background-color: white;
+        padding: 30px;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        position: relative;
+      }
+
+      /* Form title */
+      form::before {
+        content: "Crear Nuevo Usuario";
+        display: block;
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: var(--primary-color);
+        margin-bottom: 25px;
+        text-align: center;
+        border-bottom: 2px solid var(--secondary-color);
+        padding-bottom: 15px;
+      }
+
+      /* Form fields */
+      form div {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #555;
+      }
+
+      input,
+      select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background-color: white;
+      }
+
+      /* Custom styling for select dropdown */
+      select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 15px center;
+        background-size: 15px;
+        padding-right: 40px;
+        cursor: pointer;
+      }
+
+      select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+      }
+
+      select option {
+        padding: 10px;
+      }
+
+      select option:first-child {
+        color: #999;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+      }
+
+      /* Submit button */
+      button[type="submit"] {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 14px 20px;
+        width: 100%;
+        border-radius: var(--border-radius);
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-top: 10px;
+      }
+
+      button[type="submit"]:hover {
+        background-color: var(--primary-hover);
+      }
+
+      /* Back link */
+      .back-link {
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+        color: var(--primary-color);
+        text-decoration: none;
+      }
+
+      .back-link:hover {
+        text-decoration: underline;
+      }
+
+      /* Field hints and validation */
+      .hint {
+        font-size: 0.85rem;
+        color: #6b7280;
+        margin-top: 4px;
+      }
+
+      input:invalid,
+      select:invalid {
+        border-color: var(--error-color);
+      }
+
+      /* Password strength indicator */
+      .password-strength {
+        height: 5px;
+        margin-top: 8px;
+        border-radius: 3px;
+        background-color: #e5e7eb;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .password-strength::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 0%;
+        transition: width 0.3s ease;
+      }
+
+      input[name="contrasena"]:valid + .password-strength::before {
+        width: 100%;
+        background-color: var(--success-color);
+      }
+
+      /* Add a simple animation for the password strength indicator */
+      @keyframes pulse {
+        0% {
+          opacity: 0.6;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0.6;
+        }
+      }
+
+      input[name="contrasena"]:focus + .password-strength::before {
+        animation: pulse 1.5s infinite;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        form {
+          padding: 20px;
+        }
+
+        form::before {
+          font-size: 1.5rem;
+          margin-bottom: 20px;
+        }
+
+        input,
+        select {
+          padding: 10px 12px;
+        }
+
+        button[type="submit"] {
+          padding: 12px 16px;
+        }
+      }
+
+      /* Additional enhancements */
+      input[type="date"] {
+        color: #555;
+      }
+
+      input[type="date"]::-webkit-calendar-picker-indicator {
+        opacity: 0.6;
+        cursor: pointer;
+      }
+
+      input[type="date"]::-webkit-calendar-picker-indicator:hover {
+        opacity: 1;
+      }
+
+      /* Optional: Add a subtle hover effect to inputs */
+      input:hover,
+      select:hover {
+        border-color: #bbb;
+      }
+
+      /* Optional: Add a subtle transition when the form loads */
+      form {
+        animation: fadeIn 0.3s ease-in-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!--Formulario para crear nuevos empleados en la base de datos-->
+    <form action="/save-usuarios" method="post">
+      <div>
+        <label for="nombre">Nombre</label>
+        <input type="text" name="nombre" id="nombre" required />
+      </div>
+
+      <div>
+        <label for="correo">Correo</label>
+        <input type="email" name="correo" id="correo" required />
+      </div>
+
+      <div>
+        <label for="telefono">Teléfono</label>
+        <input type="tel" name="telefono" id="telefono" required />
+      </div>
+
+      <div>
+        <label for="contrasena">Contraseña</label>
+        <input type="password" name="contrasena" id="contrasena" required />
+        <div class="password-strength"></div>
+      </div>
+
+      <div>
+        <label for="rol">Rol</label>
+        <select name="rol" id="rol" required>
+          <option value="" disabled selected>Seleccione un rol</option>
+          <option value="admin">Administrador</option>
+          <option value="tecnico">Técnico</option>
+          <option value="usuario_final">Usuario Final</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="fecha_registro">Fecha de Registro</label>
+        <input
+          type="date"
+          name="fecha_registro"
+          id="fecha_registro"
+          value="<%= new Date().toISOString().split('T')[0] %>"
+          required
+        />
+      </div>
+
+      <button type="submit">Crear Usuario</button>
+
+      <a href="/usuarios" class="back-link">Volver a la lista</a>
+    </form>
+  </body>
+</html>

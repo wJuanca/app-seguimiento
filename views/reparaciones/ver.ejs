@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizar Reparacion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../../styles/reparacionform.css">
+</head>
+<body>
+    <div class="contenedor-flex">
+        <!-- barra de progresio -->
+        <div class="barra-lateral <%= reparacion.estado %>">
+            <div class="paso">
+                <div class="circle">1</div>
+                <div class="info">
+                    <div class="titulo">Pendiente</div>
+                    <div class="detalle">Esperando revisin inicial</div>
+                </div>
+            </div>
+            <div class="linea"></div>
+            <div class="paso">
+                <div class="circle">2</div>
+                <div class="info">
+                    <div class="titulo">En Proceso</div>
+                    <div class="detalle">Reparacion en curso</div>
+                </div>
+            </div>
+            <div class="linea"></div>
+            <div class="paso">
+                <div class="circle">3</div>
+                <div class="info">
+                    <div class="titulo">Reparado</div>
+                    <div class="detalle">Reparacion finalizado</div>
+                </div>
+            </div>
+        </div>
+        
+
+        <!-- formver -->
+        <div class="form-container">
+            <h1>Ver Reparación</h1>
+            <form action="/deleteReparacion" method="post" class="formulario-reparacion">
+                <div class="alado-group">
+                    <div class="alado-item">
+                        <label for="id_reparacion">ID Reparación</label>
+                        <input type="text" name="id_reparacion" id="id_reparacion" readonly value="<%= reparacion.id_reparacion %>">        
+                    </div>
+                    <div class="alado-item">
+                        <label for="equipo_id">ID Equipo</label>
+                        <input type="text" name="equipo_id" id="equipo_id" readonly value="<%= reparacion.equipo_id %>">        
+                    </div>
+                </div>
+                <div class="alado-group">
+                    <div class="alado-item">
+                        <label for="usuario_solicitante_id">ID Usuario Solicitante</label>
+                        <input type="text" name="usuario_solicitante_id" id="usuario_solicitante_id" readonly value="<%= reparacion.usuario_solicitante_id %>">        
+                    </div>
+                    <div class="alado-item">
+                        <label for="tecnico_id">ID Técnico</label>
+                        <input type="text" name="tecnico_id" id="tecnico_id" readonly value="<%= reparacion.tecnico_id %>">        
+                    </div>
+                </div>
+
+                <label for="descripcion">Descripción</label>
+                <textarea name="descripcion" id="descripcion" readonly class="textarea-reparacion"><%- reparacion.descripcion_problema %></textarea>
+
+                <div class="alado-group">
+                    <div class="alado-item">
+                        <label for="fecha_inicio">Fecha Inicio</label>
+                        <input type="date" name="fecha_entrada" id="fecha_entrada" readonly value="<%= new Date(reparacion.fecha_inicio).toISOString().split('T')[0] %>">
+                    </div>
+                    <div class="alado-item">
+                        <label for="fecha_finalizacion">Fecha Finaliza</label>
+                        <input type="date" name="fecha_salida" id="fecha_salida" readonly value="<%= new Date(reparacion.fecha_finalizacion).toISOString().split('T')[0] %>">
+                    </div>
+                </div>
+
+                <label for="estado">Estado</label>
+                <input type="text" name="estado" id="estado" readonly value="<%= reparacion.estado %>">
+
+                <a href="/reparaciones" class="btn-volver"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

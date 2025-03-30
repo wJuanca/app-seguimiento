@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Reparaciones</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <%- include('../partials/header.ejs') %>
+  
+  <main class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="mb-0">Gestión de Reparaciones</h1>
+      <a href="/reparaciones/crear" class="btn btn-success">
+        <i class="bi bi-plus-circle me-2"></i>Nueva Reparación
+      </a>
+    </div>
+    
+    <% if (mensajes.success) { %>
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <%= mensajes.success %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+      </div>
+    <% } %>
+    
+    <% if (mensajes.error) { %>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <%= mensajes.error %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+      </div>
+    <% } %>
+    
+    <div class="card">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead class="table-primary">
+              <tr>
+                <th>ID</th>
+                <th>Equipo</th>
+                <th>Descripción</th>
+                <th>Estado</th>
+                <th>Fecha Inicio</th>
+                <th>Fecha Fin</th>
+                <th>Técnico</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (reparaciones && reparaciones.length > 0) { %>
+                <% reparaciones.forEach(reparacion => { %>
+                  <tr>
+                    <td><%= reparacion.id_reparacion %></td>
+                    <td><%= reparacion.equipo_nombre || 'N/A' %></td>
+                    <td><%= reparacion.descripcion %></td>
+                    <td>
+                      <span class="badge <%= 
+                        reparacion.estado === 'pendiente' ? 'bg-warning' : 
+                        reparacion.estado === 'en_proceso' ? 'bg-info' : 
+                        reparacion.estado === 'completada' ? 'bg-success' : 
+                        'bg-danger' 
+                      %>">
+                        <%= reparacion.estado %>
+                      </span>
+                    </td>
+                    <td><%= new Date(reparacion.fecha_inicio).toLocaleDateString() %></td>
+                    <td><%= reparacion.fecha_fin ? new Date(reparacion.fecha_fin).toLocaleDateString() : 'En proceso' %></td>
+                    <td><%= reparacion.tecnico_nombre || 'No asignado' %></td>
+                    <td>
+                      <div class="d-flex gap-2">
+                        <a href="/reparaciones/editar/<%= reparacion.id_reparacion %>" class="btn btn-sm btn-outline-warning" title="Editar">
+                          <i class="bi bi-pencil"></i>
+                        </a>
+                        <button 
+                          data-id="<%= reparacion.id_reparacion %>" 
+                          class="btn btn-sm btn-outline-danger btn-delete" 
+                          title="Eliminar"
+                        >
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } else { %>
+                <tr>
+                  <td colspan="8" class="text-center">No hay reparaciones registradas</td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

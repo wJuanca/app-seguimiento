@@ -9,77 +9,77 @@
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/css/main.css">
 </head>
-<body class="bg-light">
+<body>
     <%- include('../partials/header.ejs') %>
     
-    <div class="container-fluid px-4 py-4">
-        <div class="row">
-            <div class="col-12">
-                <h2 class="mb-4 text-center display-6 text-primary">Inventario de Equipos</h2>
-                
-                <!-- Filtros Card -->
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="card-title mb-0">Filtros de Búsqueda</h5>
+    <main class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-0">Inventario de Equipos</h1>
+            <a href="/equipos/crear" class="btn btn-success">
+                <i class="bi bi-plus-circle me-2"></i>Nuevo Equipo
+            </a>
+        </div>
+        
+        <!-- Filtros Card -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">Filtros de Búsqueda</h5>
+            </div>
+            <div class="card-body">
+                <form action="/equipos" method="GET">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label">Buscar</label>
+                            <input type="text" name="busqueda" class="form-control" placeholder="Nombre/Modelo/Serie" value="<%= filtros?.busqueda || '' %>">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Marca</label>
+                            <select name="marca" class="form-select">
+                                <option value="">Todas las marcas</option>
+                                <% if (typeof marcas !== 'undefined') { %>
+                                    <% marcas.forEach(marca => { %>
+                                        <option value="<%= marca %>" <%= filtros?.marca === marca ? 'selected' : '' %>><%= marca %></option>
+                                    <% }) %>
+                                <% } %>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Tipo</label>
+                            <select name="tipo" class="form-select">
+                                <option value="">Todos los tipos</option>
+                                <option value="laptop" <%= filtros?.tipo === 'laptop' ? 'selected' : '' %>>Laptop</option>
+                                <option value="desktop" <%= filtros?.tipo === 'desktop' ? 'selected' : '' %>>Desktop</option>
+                                <option value="impresora" <%= filtros?.tipo === 'impresora' ? 'selected' : '' %>>Impresora</option>
+                                <option value="servidor" <%= filtros?.tipo === 'servidor' ? 'selected' : '' %>>Servidor</option>
+                                <option value="otro" <%= filtros?.tipo === 'otro' ? 'selected' : '' %>>Otro</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Estado</label>
+                            <select name="estado" class="form-select">
+                                <option value="">Todos los estados</option>
+                                <option value="disponible" <%= filtros?.estado === 'disponible' ? 'selected' : '' %>>Disponible</option>
+                                <option value="asignado" <%= filtros?.estado === 'asignado' ? 'selected' : '' %>>Asignado</option>
+                                <option value="en_reparacion" <%= filtros?.estado === 'en_reparacion' ? 'selected' : '' %>>En Reparación</option>
+                                <option value="dado_de_baja" <%= filtros?.estado === 'dado_de_baja' ? 'selected' : '' %>>Dado de Baja</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <form action="/equipos" method="GET">
-                            <div class="row g-3">
-                                <div class="col-md-3">
-                                    <label class="form-label">Buscar</label>
-                                    <input type="text" name="busqueda" class="form-control" placeholder="Nombre/Modelo/Serie" value="<%= filtros?.busqueda || '' %>">
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Marca</label>
-                                    <select name="marca" class="form-select">
-                                        <option value="">Todas las marcas</option>
-                                        <% marcas.forEach(marca => { %>
-                                            <option value="<%= marca %>" <%= filtros?.marca === marca ? 'selected' : '' %>><%= marca %></option>
-                                        <% }) %>
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Tipo</label>
-                                    <select name="tipo" class="form-select">
-                                        <option value="">Todos los tipos</option>
-                                        <option value="laptop" <%= filtros?.tipo === 'laptop' ? 'selected' : '' %>>Laptop</option>
-                                        <option value="desktop" <%= filtros?.tipo === 'desktop' ? 'selected' : '' %>>Desktop</option>
-                                        <option value="impresora" <%= filtros?.tipo === 'impresora' ? 'selected' : '' %>>Impresora</option>
-                                        <option value="servidor" <%= filtros?.tipo === 'servidor' ? 'selected' : '' %>>Servidor</option>
-                                        <option value="otro" <%= filtros?.tipo === 'otro' ? 'selected' : '' %>>Otro</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Estado</label>
-                                    <select name="estado" class="form-select">
-                                        <option value="">Todos los estados</option>
-                                        <option value="disponible" <%= filtros?.estado === 'disponible' ? 'selected' : '' %>>Disponible</option>
-                                        <option value="asignado" <%= filtros?.estado === 'asignado' ? 'selected' : '' %>>Asignado</option>
-                                        <option value="en_reparacion" <%= filtros?.estado === 'en_reparacion' ? 'selected' : '' %>>En Reparación</option>
-                                        <option value="dado_de_baja" <%= filtros?.estado === 'dado_de_baja' ? 'selected' : '' %>>Dado de Baja</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-end gap-2 mt-3">
-                                <a href="/equipos" class="btn btn-outline-secondary">Limpiar filtros</a>
-                                <button type="submit" class="btn btn-primary">Aplicar filtros</button>
-                            </div>
-                        </form>
+                    <div class="d-flex justify-content-end gap-2 mt-3">
+                        <a href="/equipos" class="btn btn-outline-secondary">Limpiar filtros</a>
+                        <button type="submit" class="btn btn-primary">Aplicar filtros</button>
                     </div>
-                </div>
-                
-                <!-- Nuevo Equipo Button -->
-                <div class="d-flex justify-content-end mb-3">
-                    <a href="/equipos/crear" class="btn btn-success">
-                        <i class="bi bi-plus-circle me-2"></i>Nuevo Equipo
-                    </a>
-                </div>
+                </form>
+            </div>
+        </div>
 
-                <!-- Tabla de equipos -->
+        <!-- Tabla de equipos -->
+        <div class="card">
+            <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-striped table-hover shadow-sm">
+                    <table class="table table-striped table-hover">
                         <thead class="table-primary">
                             <tr>
                                 <th>ID</th>
@@ -87,56 +87,61 @@
                                 <th>Tipo</th>
                                 <th>Marca</th>
                                 <th>Modelo</th>
-                                <th>Número de Serie</th>
+                                <th class="d-none d-md-table-cell">Número de Serie</th>
                                 <th>Estado</th>
-                                <th>Usuario Asignado</th>
+                                <th class="d-none d-lg-table-cell">Usuario Asignado</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <% equipos.forEach(equipo => { %>
-                                <tr>
-                                    <td><%= equipo.id_equipo %></td>
-                                    <td><%= equipo.nombre %></td>
-                                    <td><%= equipo.tipo %></td>
-                                    <td><%= equipo.marca %></td>
-                                    <td><%= equipo.modelo %></td>
-                                    <td><%= equipo.numero_serie %></td>
-                                    <td>
-                                        <span class="badge 
-                                            <%= 
-                                                equipo.estado === 'disponible' ? 'bg-success' : 
-                                                equipo.estado === 'asignado' ? 'bg-primary' : 
-                                                equipo.estado === 'en_reparacion' ? 'bg-warning' : 
-                                                'bg-danger' 
+                            <% if (typeof equipos !== 'undefined' && equipos.length > 0) { %>
+                                <% equipos.forEach(equipo => { %>
+                                    <tr>
+                                        <td><%= equipo.id_equipo %></td>
+                                        <td><%= equipo.nombre %></td>
+                                        <td><%= equipo.tipo %></td>
+                                        <td><%= equipo.marca %></td>
+                                        <td><%= equipo.modelo %></td>
+                                        <td class="d-none d-md-table-cell"><%= equipo.numero_serie %></td>
+                                        <td>
+                                            <span class="badge <%= 
+                                                equipo.estado === 'disponible' ? 'estado-disponible' : 
+                                                equipo.estado === 'asignado' ? 'estado-asignado' : 
+                                                equipo.estado === 'en_reparacion' ? 'estado-reparacion' : 
+                                                'estado-baja' 
                                             %>">
-                                            <%= equipo.estado %>
-                                        </span>
-                                    </td>
-                                    <td><%= equipo.usuario_actual || 'No asignado' %></td>
-                                    <td>
-                                        <div class="d-flex gap-2">
-                                            <a href="/equipos/editar/<%= equipo.id_equipo %>" class="btn btn-sm btn-outline-warning" title="Editar">
-                                                <i class="bi bi-pencil"></i>
-                                            </a>
-                                            <button 
-                                                data-delete-equipo="<%= equipo.id_equipo %>" 
-                                                data-equipo-nombre="<%= equipo.nombre %>" 
-                                                class="btn btn-sm btn-outline-danger btn-delete" 
-                                                title="Eliminar"
-                                            >
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
+                                                <%= equipo.estado %>
+                                            </span>
+                                        </td>
+                                        <td class="d-none d-lg-table-cell"><%= equipo.usuario_actual || 'No asignado' %></td>
+                                        <td>
+                                            <div class="d-flex gap-2">
+                                                <a href="/equipos/editar/<%= equipo.id_equipo %>" class="btn btn-sm btn-outline-warning" title="Editar">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                                <button 
+                                                    data-delete-equipo="<%= equipo.id_equipo %>" 
+                                                    data-equipo-nombre="<%= equipo.nombre %>" 
+                                                    class="btn btn-sm btn-outline-danger btn-delete" 
+                                                    title="Eliminar"
+                                                >
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="9" class="text-center">No hay equipos registrados</td>
                                 </tr>
-                            <% }) %>
+                            <% } %>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
     <!-- Modal de Confirmación de Eliminación -->
     <div class="modal fade" id="confirmarEliminarModal" tabindex="-1">
@@ -195,3 +200,4 @@
     </script>
 </body>
 </html>
+

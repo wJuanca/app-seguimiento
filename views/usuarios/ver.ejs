@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ver Usuario</title>
+    <style>
+      :root {
+        --primary: #4f46e5;
+        --primary-hover: #4338ca;
+        --background: #f9fafb;
+        --card-bg: #ffffff;
+        --text: #1f2937;
+        --text-secondary: #6b7280;
+        --border: #e5e7eb;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background-color: var(--background);
+        color: var(--text);
+        line-height: 1.6;
+        padding: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 2rem;
+        color: var(--primary);
+        text-align: center;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--primary);
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .user-card {
+        background-color: var(--card-bg);
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        margin-bottom: 2rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .user-detail {
+        display: flex;
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .user-detail:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      .user-detail strong {
+        min-width: 120px;
+        color: var(--primary);
+        font-weight: 600;
+      }
+
+      .user-detail span {
+        flex: 1;
+      }
+
+      .back-link {
+        display: block;
+        text-align: center;
+        margin-top: 1.5rem;
+        text-decoration: none;
+        color: white;
+        background-color: var(--primary);
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        transition: background-color 0.2s;
+        max-width: 250px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .back-link:hover {
+        background-color: var(--primary-hover);
+      }
+
+      @media (max-width: 640px) {
+        body {
+          padding: 1rem;
+        }
+
+        .user-card {
+          padding: 1.5rem;
+        }
+
+        .user-detail {
+          flex-direction: column;
+        }
+
+        .user-detail strong {
+          margin-bottom: 0.25rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Detalles del Usuario</h1>
+
+    <div class="user-card">
+      <div class="user-detail">
+        <strong>Código:</strong>
+        <span><%= usuarios.id_usuario %></span>
+      </div>
+      <div class="user-detail">
+        <strong>Nombre:</strong>
+        <span><%= usuarios.nombre %></span>
+      </div>
+      <div class="user-detail">
+        <strong>Correo:</strong>
+        <span><%= usuarios.correo %></span>
+      </div>
+      <div class="user-detail">
+        <strong>Teléfono:</strong>
+        <span><%= usuarios.telefono %></span>
+      </div>
+      <div class="user-detail">
+        <strong>Contraseña:</strong>
+        <span><%= usuarios.contrasena %></span>
+      </div>
+      <div class="user-detail">
+        <strong>Rol:</strong>
+        <span><%= usuarios.rol %></span>
+      </div>
+      <div class="user-detail">
+        <strong>Fecha:</strong>
+        <span><%= usuarios.fecha_registro.toISOString().split('T')[0] %></span>
+      </div>
+    </div>
+
+    <a href="/usuarios" class="back-link">Volver a la lista</a>
+  </body>
+</html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eliminar Empleado</title>
+    <style>
+      :root {
+        --background: #f5f7fa;
+        --card-bg: #ffffff;
+        --text: #334155;
+        --text-light: #64748b;
+        --border: #e2e8f0;
+        --danger: #ef4444;
+        --danger-hover: #dc2626;
+        --danger-light: #fee2e2;
+        --primary: #3b82f6;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      }
+
+      body {
+        background-color: var(--background);
+        color: var(--text);
+        line-height: 1.6;
+        padding: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 600px;
+      }
+
+      .card {
+        background-color: var(--card-bg);
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .card-header {
+        margin-bottom: 1.5rem;
+        text-align: center;
+        position: relative;
+      }
+
+      .card-header h1 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+      }
+
+      .card-header p {
+        color: var(--text-light);
+        font-size: 0.875rem;
+      }
+
+      .warning-badge {
+        background-color: var(--danger-light);
+        color: var(--danger);
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 0.5rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.25rem;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--text-light);
+      }
+
+      input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--border);
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        color: var(--text);
+        background-color: #f8fafc;
+        transition: border-color 0.2s;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+
+      input[readonly] {
+        background-color: #f1f5f9;
+        cursor: not-allowed;
+      }
+
+      .hidden-field {
+        display: none;
+      }
+
+      .actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 2rem;
+      }
+
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+      }
+
+      .btn-danger {
+        background-color: var(--danger);
+        color: white;
+      }
+
+      .btn-danger:hover {
+        background-color: var(--danger-hover);
+      }
+
+      .btn-cancel {
+        background-color: transparent;
+        color: var(--text-light);
+        border: 1px solid var(--border);
+      }
+
+      .btn-cancel:hover {
+        background-color: #f1f5f9;
+      }
+
+      @media (max-width: 640px) {
+        body {
+          padding: 1rem;
+        }
+
+        .card {
+          padding: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="card">
+        <div class="card-header">
+          <span class="warning-badge">Acción irreversible</span>
+          <h1>Eliminar Usuario</h1>
+          <p>Revise la información antes de eliminar este usuario</p>
+        </div>
+
+        <!-- Formulario para poder ver la información del empleado y poder eliminarlo -->
+        <form action="/eliminar-usuarios" method="post" id="deleteForm">
+          <input
+            type="text"
+            name="id_usuario"
+            value="<%= usuarios.id_usuario %>"
+            class="hidden-field"
+            readonly
+          />
+
+          <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input
+              type="text"
+              id="nombre"
+              name="nombre"
+              value="<%= usuarios.nombre %>"
+              readonly
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="correo1">Correo electrónico</label>
+            <input
+              type="email"
+              id="correo1"
+              name="correo"
+              value="<%= usuarios.correo %>"
+              readonly
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="correo2">Correo alternativo</label>
+            <input
+              type="email"
+              id="correo2"
+              name="correo"
+              value="<%= usuarios.correo %>"
+              readonly
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="correo3">Correo corporativo</label>
+            <input
+              type="email"
+              id="correo3"
+              name="correo"
+              value="<%= usuarios.correo %>"
+              readonly
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="correo4">Correo de recuperación</label>
+            <input
+              type="email"
+              id="correo4"
+              name="correo"
+              value="<%= usuarios.correo %>"
+              readonly
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="contrasena">Contraseña</label>
+            <input
+              type="text"
+              id="contrasena"
+              name="contrasena"
+              value="<%= usuarios.contrasena %>"
+              readonly
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="rol">Rol</label>
+            <input
+              type="text"
+              id="rol"
+              name="rol"
+              value="<%= usuarios.rol %>"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="fecha_registro">Fecha de registro</label>
+            <input
+              type="date"
+              id="fecha_registro"
+              name="fecha_registro"
+              value="<%= usuarios.fecha_registro.toISOString().split('T')[0] %>"
+              readonly
+            />
+          </div>
+
+          <div class="actions">
+            <a href="/usuarios" class="btn btn-cancel">Cancelar</a>
+            <button
+              type="button"
+              class="btn btn-danger"
+              onclick="confirmDelete()"
+            >
+              Eliminar Usuario
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      function confirmDelete() {
+        if (
+          confirm(
+            "¿Está seguro que desea eliminar este usuario? Esta acción no se puede deshacer."
+          )
+        ) {
+          document.getElementById("deleteForm").submit();
+        }
+      }
+    </script>
+  </body>
+</html>
