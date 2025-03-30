@@ -60,6 +60,8 @@ app.get("/equipos", (req, res) => {
   res.render("equipos/index")
 })
 
+
+
 //Seccion de usuarios
 app.use(express.urlencoded({ extended: false })) // Corregido "extended"
 app.use(express.json()) // Corregido "json()"
@@ -71,7 +73,7 @@ app.use("/equipos", verificarAutenticacion, verificarRol(["admin", "tecnico"]), 
 
 // Rutas con roles específicos
 app.use("/reparaciones", verificarAutenticacion, verificarRol(["admin", "tecnico"]), require("./routes/reparaciones"))
-//app.use("/asignaciones", verificarAutenticacion, verificarRol(["admin", "tecnico"]), require("./routes/asignaciones"))
+app.use("/asignaciones", verificarAutenticacion, verificarRol(["admin", "tecnico"]), require("./routes/asignaciones"))
 //app.use("/bitacoras", verificarAutenticacion, verificarRol(["admin", "tecnico"]), require("./routes/bitacoras"))
 //app.use("/reportes", verificarAutenticacion, verificarRol(["admin"]), require("./routes/reportes"))
 app.use("/mi-equipo", verificarAutenticacion, verificarRol(["usuario_final"]), require("./routes/mi-equipo"))
