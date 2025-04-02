@@ -1,74 +1,58 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Editar Reparación</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/css/main.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Reparación</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../../styles/reparacionform.css">
 </head>
 <body>
-  <%- include('../partials/header.ejs') %>
-  
-  <div class="container mt-5">
-    <div class="card">
-      <div class="card-header bg-primary text-white">
-        <h2 class="mb-0">Editar Reparación #<%= reparacion.id_reparacion %></h2>
-      </div>
-      <div class="card-body">
-        <form action="/reparaciones/editar/<%= reparacion.id_reparacion %>" method="POST">
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <label class="form-label">Equipo</label>
-              <select name="id_equipo" class="form-select" required>
-                <option value="" disabled>Seleccione un equipo</option>
-                <!-- Aquí irían las opciones de equipos desde la base de datos -->
-              </select>
+    <div class="form-container">
+        <h1>Editar Reparación</h1>
+        <form action="/editReparacion" method="post" class="formulario-reparacion">
+            <input type="hidden" name="id_reparacion" value="<%= reparacion.id_reparacion %>">
+
+            <div class="alado-group">
+                <div class="alado-item">
+                    <label for="equipo_id">ID Equipo</label>
+                    <input type="text" name="equipo_id" id="equipo_id" value="<%= reparacion.equipo_id %>" readonly>
+        
+                </div>
+                <div class="alado-item">
+                    <label for="usuario_solicitante_id">ID Usuario Solicitante</label>
+                    <input type="text" name="usuario_solicitante_id" id="usuario_solicitante_id" value="<%= reparacion.usuario_solicitante_id || '' %>" readonly>
+        
+                </div>
             </div>
-            
-            <div class="col-md-6">
-              <label class="form-label">Estado</label>
-              <select name="estado" class="form-select" required>
-                <option value="pendiente">Pendiente</option>
-                <option value="en_proceso">En Proceso</option>
-                <option value="completada">Completada</option>
-                <option value="cancelada">Cancelada</option>
-              </select>
+
+            <label for="tecnico_id">ID Técnico</label>
+            <input type="text" name="tecnico_id" id="tecnico_id" value="<%= reparacion.tecnico_id %>" required>
+
+            <label for="descripcion_problema">Descripción del Problema</label>
+            <textarea name="descripcion_problema" required class="textarea-reparacion"><%= reparacion.descripcion_problema %></textarea>
+
+            <label for="estado">Estado</label>
+            <select name="estado" id="estado">
+                <% estados.forEach(estado => { %>
+                    <option value="<%= estado %>" <%= reparacion.estado === estado ? 'selected' : '' %>><%= estado %></option>
+                <% }); %>
+            </select>
+
+            <div class="alado-group">
+                <div class="alado-item">
+                    <label for="fecha_inicio">Fecha Inicio</label>
+                    <input type="date" name="fecha_inicio" id="fecha_inicio" value="<%= new Date(reparacion.fecha_inicio).toISOString().split('T')[0] %>" readonly>        
+                </div>
+                <div class="alado-item">
+                    <label for="fecha_finalizacion">Fecha Finalización</label>
+                    <input type="date" name="fecha_finalizacion" id="fecha_finalizacion" value="<%= new Date(reparacion.fecha_finalizacion).toISOString().split('T')[0] %>">        
+                </div>
             </div>
-          </div>
-          
-          <div class="mb-3">
-            <label class="form-label">Descripción del Problema</label>
-            <textarea name="descripcion" class="form-control" rows="4" required></textarea>
-          </div>
-          
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <label class="form-label">Fecha de Inicio</label>
-              <input type="date" name="fecha_inicio" class="form-control" required>
-            </div>
-            
-            <div class="col-md-6">
-              <label class="form-label">Fecha de Finalización</label>
-              <input type="date" name="fecha_fin" class="form-control">
-            </div>
-          </div>
-          
-          <div class="mb-3">
-            <label class="form-label">Solución</label>
-            <textarea name="solucion" class="form-control" rows="4"></textarea>
-          </div>
-          
-          <div class="d-flex justify-content-end gap-2">
-            <a href="/reparaciones" class="btn btn-secondary">Cancelar</a>
-            <button type="submit" class="btn btn-success">Actualizar Reparación</button>
-          </div>
+
+
+            <button type="submit">Actualizar Reparación</button>
         </form>
-      </div>
     </div>
-  </div>
-  
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-

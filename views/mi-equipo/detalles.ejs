@@ -1,259 +1,397 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalles de mi Equipo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalles del Equipo - Sistema de Gestión</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/main.css">
-    <style>
-        .equipo-header {
-          background-color: white;
-          border-radius: 0.5rem;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-          padding: 1.5rem;
-          margin-bottom: 2rem;
-          position: relative;
-        }
-        
-        .equipo-icon {
-          font-size: 3rem;
-          color: #2563eb;
-          margin-right: 1.5rem;
-        }
-        
-        .estado-badge {
-          position: absolute;
-          top: 1.5rem;
-          right: 1.5rem;
-          padding: 0.25rem 0.75rem;
-          border-radius: 9999px;
-          font-size: 0.875rem;
-          font-weight: 500;
-        }
-        
-        .estado-disponible {
-          background-color: #d1fae5;
-          color: #065f46;
-        }
-        
-        .estado-asignado {
-          background-color: #dbeafe;
-          color: #1e40af;
-        }
-        
-        .estado-reparacion {
-          background-color: #fef3c7;
-          color: #92400e;
-        }
-        
-        .estado-baja {
-          background-color: #fee2e2;
-          color: #b91c1c;
-        }
-        
-        .equipo-details {
-          background-color: white;
-          border-radius: 0.5rem;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-          padding: 1.5rem;
-          margin-bottom: 2rem;
-        }
-        
-        .detail-item {
-          padding: 0.75rem 0;
-          border-bottom: 1px solid #e5e7eb;
-          display: flex;
-        }
-        
-        .detail-item:last-child {
-          border-bottom: none;
-        }
-        
-        .detail-label {
-          font-weight: 500;
-          color: #4b5563;
-          width: 150px;
-        }
-        
-        .detail-value {
-          flex: 1;
-        }
-        
-        .timeline {
-          position: relative;
-          padding-left: 2rem;
-        }
-        
-        .timeline::before {
-          content: '';
-          position: absolute;
-          left: 0;
-          top: 0;
-          height: 100%;
-          width: 2px;
-          background-color: #e5e7eb;
-        }
-        
-        .timeline-item {
-          position: relative;
-          padding-bottom: 1.5rem;
-        }
-        
-        .timeline-item:last-child {
-          padding-bottom: 0;
-        }
-        
-        .timeline-dot {
-          position: absolute;
-          left: -2rem;
-          top: 0;
-          width: 1rem;
-          height: 1rem;
-          border-radius: 50%;
-          background-color: #2563eb;
-          border: 3px solid white;
-        }
-        
-        .timeline-content {
-          background-color: #f8fafc;
-          border-radius: 0.5rem;
-          padding: 1rem;
-        }
-        
-        .timeline-date {
-          font-size: 0.875rem;
-          color: #64748b;
-          margin-bottom: 0.5rem;
-        }
-        
-        .timeline-title {
-          font-weight: 600;
-          margin-bottom: 0.5rem;
-        }
-        
-        .timeline-description {
-          color: #4b5563;
-        }
-        
-        .back-btn {
-          display: inline-flex;
-          align-items: center;
-          color: #2563eb;
-          text-decoration: none;
-          font-weight: 500;
-        }
-        
-        .back-btn:hover {
-          text-decoration: underline;
-        }
-        
-        .back-btn i {
-          margin-right: 0.5rem;
-        }
-      </style>
+  <style>
+    .estado-badge {
+      padding: 0.35rem 0.65rem;
+      border-radius: 50rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+    .estado-pendiente {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+    .estado-en_proceso {
+      background-color: #cce5ff;
+      color: #004085;
+    }
+    .estado-reparado {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .estado-descartado {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+      margin-bottom: 2rem;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0.85rem;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background-color: #e9ecef;
+    }
+    .timeline-item {
+      position: relative;
+      padding-bottom: 1.5rem;
+    }
+    .timeline-item:last-child {
+      padding-bottom: 0;
+    }
+    .timeline-icon {
+      position: absolute;
+      left: -2rem;
+      width: 1.75rem;
+      height: 1.75rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f8f9fa;
+      border: 2px solid #e9ecef;
+      z-index: 1;
+    }
+    .timeline-icon.active {
+      background-color: #cce5ff;
+      border-color: #0d6efd;
+      color: #0d6efd;
+    }
+    .timeline-icon.completed {
+      background-color: #d4edda;
+      border-color: #198754;
+      color: #198754;
+    }
+    .timeline-icon.warning {
+      background-color: #fff3cd;
+      border-color: #ffc107;
+      color: #856404;
+    }
+    .timeline-icon.danger {
+      background-color: #f8d7da;
+      border-color: #dc3545;
+      color: #721c24;
+    }
+    .timeline-content {
+      padding: 1rem;
+      background-color: #f8f9fa;
+      border-radius: 0.5rem;
+    }
+  </style>
 </head>
 <body>
-    <%- include('../partials/header.ejs') %>
-    <div class="container mt-5">
-        <a href="/mi-equipo" class="back-btn mb-4">
-          <i class="bi bi-arrow-left"></i> Volver a mis equipos
-        </a>
-        
-        <div class="equipo-header d-flex align-items-center">
-          <i class="bi <%= 
-            equipo.tipo === 'laptop' ? 'bi-laptop' : 
-            equipo.tipo === 'desktop' ? 'bi-pc-display' : 
-            equipo.tipo === 'impresora' ? 'bi-printer' : 
-            equipo.tipo === 'servidor' ? 'bi-server' : 
-            'bi-device-hdd' 
-          %> equipo-icon"></i>
-          
-          <div>
-            <h1 class="mb-1"><%= equipo.nombre %></h1>
-            <p class="text-muted mb-0"><%= equipo.marca %> <%= equipo.modelo %></p>
+  <%- include('../partials/header.ejs') %>
+  
+  <div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="mb-0">Detalles del Equipo</h1>
+      <a href="/mi-equipo" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-2"></i>Volver a Mis Equipos
+      </a>
+    </div>
+    
+    <% if (mensajes.error) { %>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <%= mensajes.error %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+      </div>
+    <% } %>
+    
+    <% if (mensajes.success) { %>
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <%= mensajes.success %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+      </div>
+    <% } %>
+    
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white">
+            <h5 class="card-title mb-0">Información del Equipo</h5>
           </div>
-          
-          <span class="estado-badge <%= 
-            equipo.estado === 'disponible' ? 'estado-disponible' : 
-            equipo.estado === 'asignado' ? 'estado-asignado' : 
-            equipo.estado === 'en_reparacion' ? 'estado-reparacion' : 
-            'estado-baja' 
-          %>">
-            <%= equipo.estado %>
-          </span>
-        </div>
-        
-        <div class="row">
-          <div class="col-md-6">
-            <div class="equipo-details">
-              <h3 class="mb-3">Detalles del Equipo</h3>
-              
-              <div class="detail-item">
-                <div class="detail-label">Tipo:</div>
-                <div class="detail-value"><%= equipo.tipo %></div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <h6 class="text-muted">Nombre</h6>
+                <p class="fs-5"><%= equipo.nombre %></p>
               </div>
-              
-              <div class="detail-item">
-                <div class="detail-label">Marca:</div>
-                <div class="detail-value"><%= equipo.marca %></div>
+              <div class="col-md-6 mb-3">
+                <h6 class="text-muted">Tipo</h6>
+                <p class="fs-5"><%= equipo.tipo %></p>
               </div>
-              
-              <div class="detail-item">
-                <div class="detail-label">Modelo:</div>
-                <div class="detail-value"><%= equipo.modelo %></div>
+              <div class="col-md-6 mb-3">
+                <h6 class="text-muted">Marca</h6>
+                <p class="fs-5"><%= equipo.marca %></p>
               </div>
-              
-              <div class="detail-item">
-                <div class="detail-label">Número de Serie:</div>
-                <div class="detail-value"><%= equipo.numero_serie %></div>
+              <div class="col-md-6 mb-3">
+                <h6 class="text-muted">Modelo</h6>
+                <p class="fs-5"><%= equipo.modelo %></p>
               </div>
-              
-              <div class="detail-item">
-                <div class="detail-label">Estado:</div>
-                <div class="detail-value"><%= equipo.estado %></div>
+              <div class="col-md-6 mb-3">
+                <h6 class="text-muted">Número de Serie</h6>
+                <p class="fs-5"><%= equipo.numero_serie %></p>
+              </div>
+              <div class="col-md-6 mb-3">
+                <h6 class="text-muted">Estado</h6>
+                <p>
+                  <span class="estado-badge <%= 
+                    equipo.estado === 'disponible' ? 'estado-disponible' : 
+                    equipo.estado === 'asignado' ? 'estado-asignado' : 
+                    equipo.estado === 'en_reparacion' ? 'estado-en_proceso' : 
+                    'estado-descartado' 
+                  %>">
+                    <%= equipo.estado.replace('_', ' ') %>
+                  </span>
+                </p>
               </div>
             </div>
           </div>
-          
-          <div class="col-md-6">
-            <div class="equipo-details">
-              <h3 class="mb-3">Historial de Reparaciones</h3>
+        </div>
+        
+        <% if (reparacionActiva) { %>
+          <div class="card mb-4">
+            <div class="card-header bg-warning text-dark">
+              <h5 class="card-title mb-0">Reparación en Curso</h5>
+            </div>
+            <div class="card-body">
+              <div class="mb-3">
+                <h6 class="text-muted">Problema Reportado</h6>
+                <div class="p-3 bg-light rounded">
+                  <%= reparacionActiva.descripcion_problema %>
+                </div>
+              </div>
               
-              <% if (reparaciones && reparaciones.length > 0) { %>
-                <div class="timeline">
-                  <% reparaciones.forEach(reparacion => { %>
-                    <div class="timeline-item">
-                      <div class="timeline-dot"></div>
-                      <div class="timeline-content">
-                        <div class="timeline-date">
-                          <%= new Date(reparacion.fecha_inicio).toLocaleDateString() %>
-                          <% if (reparacion.fecha_fin) { %>
-                            - <%= new Date(reparacion.fecha_fin).toLocaleDateString() %>
-                          <% } %>
-                        </div>
-                        <div class="timeline-title">
-                          <%= reparacion.estado === 'pendiente' ? 'Pendiente' : 
-                             reparacion.estado === 'en_proceso' ? 'En Proceso' : 
-                             reparacion.estado === 'completada' ? 'Completada' : 
-                             'Cancelada' %>
-                        </div>
-                        <div class="timeline-description">
-                          <%= reparacion.descripcion %>
-                        </div>
-                      </div>
-                    </div>
-                  <% }) %>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <h6 class="text-muted">Fecha de Reporte</h6>
+                  <p><%= new Date(reparacionActiva.fecha_inicio).toLocaleString() %></p>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <h6 class="text-muted">Estado</h6>
+                  <p>
+                    <span class="estado-badge estado-<%= reparacionActiva.estado %>">
+                      <%= reparacionActiva.estado === 'pendiente' ? 'Pendiente de asignación' : 'En proceso de reparación' %>
+                    </span>
+                  </p>
+                </div>
+              </div>
+              
+              <% if (reparacionActiva.estado === 'en_proceso' && reparacionActiva.nombre_tecnico) { %>
+                <div class="alert alert-info">
+                  <h6 class="mb-2">Técnico Asignado</h6>
+                  <p class="mb-0">
+                    <strong><%= reparacionActiva.nombre_tecnico %></strong><br>
+                    <% if (reparacionActiva.telefono_tecnico) { %>
+                      <small>Teléfono: <%= reparacionActiva.telefono_tecnico %></small>
+                    <% } %>
+                  </p>
                 </div>
               <% } else { %>
-                <p class="text-muted">Este equipo no tiene historial de reparaciones.</p>
+                <div class="alert alert-warning">
+                  <i class="bi bi-exclamation-triangle me-2"></i>
+                  Tu solicitud está pendiente de asignación. Un técnico revisará tu equipo pronto.
+                </div>
               <% } %>
             </div>
           </div>
+        <% } %>
+        
+        <% if (reparaciones && reparaciones.length > 0) { %>
+          <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+              <h5 class="card-title mb-0">Historial de Reparaciones</h5>
+            </div>
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Fecha</th>
+                      <th>Problema</th>
+                      <th>Estado</th>
+                      <th>Técnico</th>
+                      <th>Finalización</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% reparaciones.forEach(reparacion => { %>
+                      <tr>
+                        <td><%= new Date(reparacion.fecha_inicio).toLocaleDateString() %></td>
+                        <td><%= reparacion.descripcion_problema %></td>
+                        <td>
+                          <span class="estado-badge estado-<%= reparacion.estado %>">
+                            <%= reparacion.estado.replace('_', ' ') %>
+                          </span>
+                        </td>
+                        <td><%= reparacion.nombre_tecnico || 'No asignado' %></td>
+                        <td>
+                          <% if (reparacion.estado === 'reparado') { %>
+                            <span class="text-success">
+                              <%= reparacion.fecha_finalizacion ? new Date(reparacion.fecha_finalizacion).toLocaleDateString() : 'Completado' %>
+                            </span>
+                          <% } else if (reparacion.estado === 'descartado') { %>
+                            <span class="text-danger">
+                              <%= reparacion.fecha_finalizacion ? new Date(reparacion.fecha_finalizacion).toLocaleDateString() : 'Descartado' %>
+                            </span>
+                          <% } else { %>
+                            <span class="text-muted">En proceso</span>
+                          <% } %>
+                        </td>
+                      </tr>
+                    <% }) %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        <% } %>
+      </div>
+      
+      <div class="col-lg-4">
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white">
+            <h5 class="card-title mb-0">Acciones</h5>
+          </div>
+          <div class="card-body">
+            <% if (equipo.estado === 'en_reparacion') { %>
+              <div class="alert alert-warning">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                Este equipo está actualmente en reparación. No se pueden realizar acciones hasta que se complete la reparación.
+              </div>
+              
+              <div class="timeline mt-4">
+                <div class="timeline-item">
+                  <div class="timeline-icon completed">
+                    <i class="bi bi-1-circle"></i>
+                  </div>
+                  <div class="timeline-content">
+                    <h6>Solicitud Enviada</h6>
+                    <p class="text-muted mb-0">
+                      <small><%= reparacionActiva ? new Date(reparacionActiva.fecha_inicio).toLocaleString() : 'Fecha no disponible' %></small>
+                    </p>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-icon <%= reparacionActiva && reparacionActiva.estado === 'en_proceso' ? 'completed' : 'warning' %>">
+                    <i class="bi bi-2-circle"></i>
+                  </div>
+                  <div class="timeline-content">
+                    <h6>Asignación de Técnico</h6>
+                    <% if (reparacionActiva && reparacionActiva.estado === 'pendiente') { %>
+                      <p class="text-warning mb-0">Pendiente de asignación</p>
+                    <% } else if (reparacionActiva && reparacionActiva.estado === 'en_proceso') { %>
+                      <p class="text-primary mb-0">
+                        <small>Asignado a: <%= reparacionActiva.nombre_tecnico %></small><br>
+                        <small><%= reparacionActiva.fecha_asignacion ? new Date(reparacionActiva.fecha_asignacion).toLocaleString() : 'Fecha no disponible' %></small>
+                      </p>
+                    <% } %>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-icon <%= reparacionActiva && reparacionActiva.estado === 'en_proceso' ? 'active' : '' %>">
+                    <i class="bi bi-3-circle"></i>
+                  </div>
+                  <div class="timeline-content">
+                    <h6>Reparación</h6>
+                    <% if (reparacionActiva && reparacionActiva.estado === 'pendiente') { %>
+                      <p class="text-muted mb-0">Esperando asignación de técnico</p>
+                    <% } else if (reparacionActiva && reparacionActiva.estado === 'en_proceso') { %>
+                      <p class="text-primary mb-0">En proceso</p>
+                    <% } %>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-icon">
+                    <i class="bi bi-4-circle"></i>
+                  </div>
+                  <div class="timeline-content">
+                    <h6>Finalización</h6>
+                    <p class="text-muted mb-0">Pendiente</p>
+                  </div>
+                </div>
+              </div>
+            <% } else { %>
+              <div class="d-grid gap-3">
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#devolverModal">
+                  <i class="bi bi-arrow-return-left me-2"></i>Devolver en Buen Estado
+                </button>
+                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#reportarModal">
+                  <i class="bi bi-tools me-2"></i>Reportar para Reparación
+                </button>
+              </div>
+            <% } %>
+          </div>
         </div>
       </div>
-
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </div>
+  </div>
+  
+  <!-- Modal para Devolver Equipo -->
+  <div class="modal fade" id="devolverModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmar Devolución</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p>¿Está seguro que desea devolver este equipo? Esta acción no se puede deshacer.</p>
+          <p class="text-muted">Al devolver el equipo, este quedará disponible para ser asignado a otro usuario.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <form action="/mi-equipo/devolver/<%= equipo.id_equipo %>" method="POST">
+            <button type="submit" class="btn btn-success">Confirmar Devolución</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal para Reportar para Reparación -->
+  <div class="modal fade" id="reportarModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Reportar para Reparación</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form action="/mi-equipo/reportar/<%= equipo.id_equipo %>" method="POST">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="descripcion_problema" class="form-label">Describa el problema:</label>
+              <textarea class="form-control" id="descripcion_problema" name="descripcion_problema" rows="4" required></textarea>
+              <div class="form-text">Por favor, sea lo más específico posible sobre el problema que presenta el equipo.</div>
+            </div>
+            <p class="text-muted">Al reportar el equipo para reparación, este quedará en estado de reparación y no estará disponible hasta que se complete el proceso.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-warning">Enviar Reporte</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+

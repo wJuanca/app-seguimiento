@@ -9,7 +9,7 @@ const flash = require("connect-flash")
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
-// Configuración de cookies y sesiones
+// Configuración de cookies y sesiones con mayor duración (1 semana)
 app.use(cookieParser())
 app.use(
   session({
@@ -17,7 +17,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 3600000,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 1 semana en milisegundos
       secure: false,
     },
   }),
@@ -40,43 +40,34 @@ app.set("views", path.join(__dirname, "views"))
 // Servir archivos estáticos
 app.use(express.static(path.join(__dirname, "public")))
 
-// Importar rutas
-const mainRoutes = require("./routes/index")
-const authRoutes = require("./routes/auth")
-
 // Middleware para verificar autenticación
 const { verificarAutenticacion, verificarRol } = require("./middlewares/auth")
 
-// Usar las rutas principales
-app.use("/", mainRoutes)
-app.use("/auth", authRoutes)
-
-//mostrar la seccion actual
+// Ruta principal - redirigir al login si no hay sesión
 app.get("/", (req, res) => {
+  if (!req.session.usuario) {
+    return res.redirect("/auth/login")
+  }
   res.render("index")
 })
 
-app.get("/equipos", (req, res) => {
-  res.render("equipos/index")
-})
+// Importar rutas
+const authRoutes = require("./routes/auth")
+const usuariosRoutes = require("./routes/usuarios")
+const equiposRoutes = require("./routes/equipos")
+const reparacionesRoutes = require("./routes/reparaciones")
+const asignacionesRoutes = require("./routes/asignaciones")
+const miEquipoRoutes = require("./routes/mi-equipo")
 
+// Usar las rutas principales
+app.use("/auth", authRoutes)
 
-
-//Seccion de usuarios
-app.use(express.urlencoded({ extended: false })) // Corregido "extended"
-app.use(express.json()) // Corregido "json()"
-app.use("/", require("./routes/usuarios"))
-
-// Rutas protegidas por autenticación (aqui asignamos los roles de cada ruta)
-app.use("/usuarios", verificarAutenticacion, verificarRol(["admin"]), require("./routes/usuarios"))
-app.use("/equipos", verificarAutenticacion, verificarRol(["admin", "tecnico"]), require("./routes/equipos"))
-
-// Rutas con roles específicos
-app.use("/reparaciones", verificarAutenticacion, verificarRol(["admin", "tecnico"]), require("./routes/reparaciones"))
-app.use("/asignaciones", verificarAutenticacion, verificarRol(["admin", "tecnico"]), require("./routes/asignaciones"))
-//app.use("/bitacoras", verificarAutenticacion, verificarRol(["admin", "tecnico"]), require("./routes/bitacoras"))
-//app.use("/reportes", verificarAutenticacion, verificarRol(["admin"]), require("./routes/reportes"))
-app.use("/mi-equipo", verificarAutenticacion, verificarRol(["usuario_final"]), require("./routes/mi-equipo"))
+// Rutas protegidas por autenticación
+app.use("/usuarios", verificarAutenticacion, verificarRol(["admin"]), usuariosRoutes)
+app.use("/equipos", verificarAutenticacion, verificarRol(["admin", "tecnico"]), equiposRoutes)
+app.use("/reparaciones", verificarAutenticacion, verificarRol(["admin", "tecnico"]), reparacionesRoutes)
+app.use("/asignaciones", verificarAutenticacion, verificarRol(["admin", "tecnico"]), asignacionesRoutes)
+app.use("/mi-equipo", verificarAutenticacion, verificarRol(["usuario_final"]), miEquipoRoutes)
 
 // Iniciar el servidor
 const PORT = process.env.PORT || 5000

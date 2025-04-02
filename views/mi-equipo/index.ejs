@@ -22,10 +22,11 @@
       position: absolute;
       top: 10px;
       right: 10px;
-      padding: 0.25rem 0.5rem;
-      border-radius: 9999px;
+      padding: 0.35rem 0.65rem;
+      border-radius: 50rem;
       font-size: 0.75rem;
-      font-weight: 500;
+      font-weight: 600;
+      text-transform: capitalize;
     }
     
     .estado-disponible {
@@ -38,14 +39,24 @@
       color: #1e40af;
     }
     
-    .estado-reparacion {
-      background-color: #fef3c7;
-      color: #92400e;
+    .estado-en_proceso {
+      background-color: #cce5ff;
+      color: #004085;
     }
     
-    .estado-baja {
-      background-color: #fee2e2;
-      color: #b91c1c;
+    .estado-pendiente {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+    
+    .estado-reparado {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    
+    .estado-descartado {
+      background-color: #f8d7da;
+      color: #721c24;
     }
     
     .equipo-icon {
@@ -89,15 +100,17 @@
   <div class="container mt-5">
     <h1 class="mb-4">Mis Equipos</h1>
     
-    <% if (mensajes.error) { %>
-      <div class="alert alert-danger">
+    <% if (mensajes && mensajes.error) { %>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <%= mensajes.error %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
       </div>
     <% } %>
     
-    <% if (mensajes.success) { %>
-      <div class="alert alert-success">
+    <% if (mensajes && mensajes.success) { %>
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
         <%= mensajes.success %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
       </div>
     <% } %>
     
@@ -105,16 +118,22 @@
       <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         <% equipos.forEach(equipo => { %>
           <div class="col">
-            <div class="card equipo-card">
+            <div class="card h-100 equipo-card">
               <div class="card-body d-flex flex-column">
-                <span class="estado-badge <%= 
-                  equipo.estado === 'disponible' ? 'estado-disponible' : 
-                  equipo.estado === 'asignado' ? 'estado-asignado' : 
-                  equipo.estado === 'en_reparacion' ? 'estado-reparacion' : 
-                  'estado-baja' 
-                %>">
-                  <%= equipo.estado %>
-                </span>
+                <% if (equipo.estado === 'en_reparacion' && equipo.estado_reparacion) { %>
+                  <span class="estado-badge estado-<%= equipo.estado_reparacion %>">
+                    <%= equipo.estado_reparacion === 'pendiente' ? 'Pendiente de reparación' : 'En reparación' %>
+                  </span>
+                <% } else { %>
+                  <span class="estado-badge <%= 
+                    equipo.estado === 'disponible' ? 'estado-disponible' : 
+                    equipo.estado === 'asignado' ? 'estado-asignado' : 
+                    equipo.estado === 'en_reparacion' ? 'estado-en_proceso' : 
+                    'estado-descartado' 
+                  %>">
+                    <%= equipo.estado.replace('_', ' ') %>
+                  </span>
+                <% } %>
                 
                 <div class="text-center mb-3">
                   <i class="bi <%= 
@@ -137,10 +156,16 @@
                   <strong>Modelo:</strong> <%= equipo.modelo %>
                 </div>
                 
-                <% if (equipo.estado_reparacion) { %>
-                  <div class="alert alert-warning mt-3">
-                    <strong>En reparación:</strong> <%= equipo.descripcion %>
-                    <div><small>Desde: <%= new Date(equipo.fecha_inicio).toLocaleDateString() %></small></div>
+                <% if (equipo.estado === 'en_reparacion' && equipo.id_reparacion) { %>
+                  <div class="alert <%= equipo.estado_reparacion === 'pendiente' ? 'alert-warning' : 'alert-info' %> mt-3">
+                    <strong><%= equipo.estado_reparacion === 'pendiente' ? 'Pendiente de asignación:' : 'En reparación:' %></strong>
+                    <p class="mb-1"><%= equipo.descripcion_problema %></p>
+                    <div>
+                      <small>Desde: <%= new Date(equipo.fecha_inicio).toLocaleDateString() %></small>
+                      <% if (equipo.nombre_tecnico) { %>
+                        <br><small>Técnico: <%= equipo.nombre_tecnico %></small>
+                      <% } %>
+                    </div>
                   </div>
                 <% } %>
                 
