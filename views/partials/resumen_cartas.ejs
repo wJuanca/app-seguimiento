@@ -1,0 +1,35 @@
+<!-- Para Resumen General - Reporte de Inventario -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h5 class="card-title">Total de <%= title === "Inventario" ? "Equipos" : title %></h5>
+                <h2 class="card-text"><%= resumen.total %></h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title">Disponibles</h5>
+                <h2 class="card-text"><%= resumen.disponibles %></h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning">
+            <div class="card-body">
+                <h5 class="card-title">En Reparación</h5>
+                <h2 class="card-text"><%= resumen.en_reparacion %></h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-danger">
+            <div class="card-body">
+                <h5 class="card-title">Dados de Baja</h5>
+                <h2 class="card-text"><%= resumen.dados_de_baja %></h2>
+            </div>
+        </div>
+    </div>
+</div>

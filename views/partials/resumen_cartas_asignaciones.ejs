@@ -1,0 +1,39 @@
+<!-- Para Resumen General - Reporte de Asignaciones -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h5 class="card-title">Total Equipos</h5>
+                <h2 class="card-text"><%= totalEquipos.total %></h2>
+                <p class="card-text"><small>En sistema</small></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title">Asignados</h5>
+                <h2 class="card-text"><%= totalEquipos.asignados %></h2>
+                <p class="card-text"><small>En uso actualmente</small></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <h5 class="card-title">Disponibles</h5>
+                <h2 class="card-text"><%= totalEquipos.disponibles %></h2>
+                <p class="card-text"><small>Para asignar</small></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-secondary">
+            <div class="card-body">
+                <h5 class="card-title">Usuarios</h5>
+                <h2 class="card-text"><%= distribucionEquipos.length %></h2>
+                <p class="card-text"><small>Con equipos asignados</small></p>
+            </div>
+        </div>
+    </div>
+</div>

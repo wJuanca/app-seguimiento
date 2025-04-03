@@ -1,0 +1,35 @@
+<!-- Para Resumen General - Reporte de Mantenimiento -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-warning">
+            <div class="card-body">
+                <h5 class="card-title">Pendientes</h5>
+                <h2 class="card-text"><%= flujoReparaciones.pendientes %></h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <h5 class="card-title">En Proceso</h5>
+                <h2 class="card-text"><%= flujoReparaciones.en_proceso %></h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title">Completadas</h5>
+                <h2 class="card-text"><%= flujoReparaciones.completadas %></h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-danger">
+            <div class="card-body">
+                <h5 class="card-title">Descartadas</h5>
+                <h2 class="card-text"><%= flujoReparaciones.descartadas %></h2>
+            </div>
+        </div>
+    </div>
+</div>

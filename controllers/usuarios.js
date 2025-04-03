@@ -1,12 +1,12 @@
-const conexion = require("../database/db");
+const conexion = require("../database/db")
 
 exports.save = (req, res) => {
-  const nombre = req.body.nombre;
-  const correo = req.body.correo;
-  const telefono = req.body.telefono;
-  const contrasena = req.body.contrasena;
-  const rol = req.body.rol;
-  const fecha_registro = req.body.fecha_registro;
+  const nombre = req.body.nombre
+  const correo = req.body.correo
+  const telefono = req.body.telefono
+  const contrasena = req.body.contrasena
+  const rol = req.body.rol
+  const fecha_registro = req.body.fecha_registro
 
   conexion.query(
     "INSERT INTO usuarios SET ?",
@@ -20,22 +20,22 @@ exports.save = (req, res) => {
     },
     (error, resultado) => {
       if (error) {
-        console.log(error);
+        console.log(error)
       } else {
-        res.redirect("/usuarios");
+        res.redirect("/usuarios")
       }
-    }
-  );
-};
+    },
+  )
+}
 
 exports.edit = (req, res) => {
-  const id_usuario = req.body.id_usuario;
-  const nombre = req.body.nombre;
-  const correo = req.body.correo;
-  const telefono = req.body.telefono;
-  const contrasena = req.body.contrasena;
-  const rol = req.body.rol;
-  const fecha_registro = req.body.fecha_registro;
+  const id_usuario = req.body.id_usuario
+  const nombre = req.body.nombre
+  const correo = req.body.correo
+  const telefono = req.body.telefono
+  const contrasena = req.body.contrasena
+  const rol = req.body.rol
+  const fecha_registro = req.body.fecha_registro
 
   conexion.query(
     "UPDATE usuarios SET ? WHERE id_usuario = ?",
@@ -53,28 +53,24 @@ exports.edit = (req, res) => {
     ],
     (error, resultado) => {
       if (error) {
-        console.log(error);
+        console.log(error)
       } else {
-        res.redirect("/usuarios");
+        res.redirect("/usuarios")
       }
-    }
-  );
-};
+    },
+  )
+}
 
 exports.eliminar = (req, res) => {
-  const id_usuario = req.body.id_usuario;
+  const id_usuario = req.body.id_usuario
 
-  conexion.query(
-    "DELETE FROM usuarios WHERE id_usuario = ?",
-    [id_usuario],
-    (error, resultado) => {
-      if (error) {
-        console.log(error);
-        res.status(500).send("Error al eliminar el usuario");
-      } else {
-        res.redirect("/usuarios");
-      }
+  conexion.query("DELETE FROM usuarios WHERE id_usuario = ?", [id_usuario], (error, resultado) => {
+    if (error) {
+      console.log(error)
+      res.status(500).send("Error al eliminar el usuario")
+    } else {
+      res.redirect("/usuarios")
     }
-  );
-};
+  })
+}
 

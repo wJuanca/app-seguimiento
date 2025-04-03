@@ -1,0 +1,39 @@
+<!-- Para Resumen General - Reporte de Solicitudes -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h5 class="card-title">Nuevas</h5>
+                <h2 class="card-text"><%= controlSolicitudes.nuevas %></h2>
+                <p class="card-text"><small>Solicitudes pendientes</small></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning">
+            <div class="card-body">
+                <h5 class="card-title">En Proceso</h5>
+                <h2 class="card-text"><%= controlSolicitudes.en_proceso %></h2>
+                <p class="card-text"><small>En atención</small></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title">Resueltas</h5>
+                <h2 class="card-text"><%= controlSolicitudes.resueltas %></h2>
+                <p class="card-text"><small>Completadas</small></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-danger">
+            <div class="card-body">
+                <h5 class="card-title">Canceladas</h5>
+                <h2 class="card-text"><%= controlSolicitudes.canceladas %></h2>
+                <p class="card-text"><small>No procesadas</small></p>
+            </div>
+        </div>
+    </div>
+</div>

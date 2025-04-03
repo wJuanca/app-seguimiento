@@ -1,0 +1,86 @@
+<div class="card mb-4 no-animation">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="card-title">Historial</h5>
+            <button id="resetFilters" class="btn btn-secondary btn-sm">Resetear Filtros</button>
+        </div>
+        
+        <div class="row g-3 mb-3">
+            <div class="col-md-2">
+                <select class="form-select" id="estadoFilter">
+                    <option value="">Estado</option>
+                    <option value="pendiente">Pendiente</option>
+                    <option value="en_proceso">En Proceso</option>
+                    <option value="reparado">Reparado</option>
+                    <option value="descartado">Descartado</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select class="form-select" id="usuarioFilter">
+                    <option value="">Usuario</option>
+                    <% [...new Set(listaEquipos.map(e => e.usuario_solicitante))].filter(Boolean).forEach(usuario => { %>
+                        <option value="<%= usuario %>"><%= usuario %></option>
+                    <% }); %>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select class="form-select" id="tecnicoFilter">
+                    <option value="">Técnico</option>
+                    <% [...new Set(listaEquipos.map(e => e.tecnico_asignado))].filter(Boolean).forEach(tecnico => { %>
+                        <option value="<%= tecnico %>"><%= tecnico %></option>
+                    <% }); %>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <input type="date" class="form-control" id="fechaFilter">
+            </div>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Equipo</th>
+                        <th>Tipo</th>
+                        <th>Usuario Solicitante</th>
+                        <th>Técnico Asignado</th>
+                        <th>Descripción</th>
+                        <th>Estado</th>
+                        <th>Días en Reparación</th>
+                        <th>Fecha Inicio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (listaEquipos && listaEquipos.length > 0) { %>
+                        <% listaEquipos.forEach(equipo => { %>
+                            <tr>
+                                <td><%= equipo.nombre %></td>
+                                <td><%= equipo.tipo.charAt(0).toUpperCase() + equipo.tipo.slice(1).replace('_', ' ') %></td>
+                                <td><%= equipo.usuario_solicitante || 'No asignado' %></td>
+                                <td><%= equipo.tecnico_asignado || 'Pendiente' %></td>
+                                <td><%= equipo.descripcion || 'Sin descripción' %></td>
+                                <td>
+                                    <span class="badge <%= 
+                                        equipo.estado === 'pendiente' ? 'bg-warning' :
+                                        equipo.estado === 'en_proceso' ? 'bg-info' :
+                                        equipo.estado === 'reparado' ? 'bg-success' :
+                                        'bg-danger'
+                                    %>">
+                                        <%= equipo.estado.charAt(0).toUpperCase() + equipo.estado.slice(1).replace('_', ' ') %>
+                                    </span>
+                                </td>
+                                <td><%= equipo.dias_reparacion %> días</td>
+                                <td><%= new Date(equipo.fecha_inicio).toLocaleDateString() %></td>
+                            </tr>
+                        <% }); %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="8" class="text-center">No hay equipos en reparación</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

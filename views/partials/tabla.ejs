@@ -1,0 +1,91 @@
+<!-- Tabla de Inventario -->
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="card-title">Lista de <%= title === "Inventario" ? "Equipos" : title %></h5>
+        </div>
+
+        <!-- Filtros -->
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <label for="">Estado</label>
+                <select class="form-select" id="estadoFilter" aria-placeholder="Todos">
+                    <option value="">Todos</option>
+                    <option value="disponible">Disponible</option>
+                    <option value="asignado">Asignado</option>
+                    <option value="en_reparacion">En Reparación</option>
+                    <option value="dado_de_baja">Dado de Baja</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="">Tipo</label>
+                <select class="form-select" id="tipoFilter" aria-placeholder="Tipo">
+                    <option value="">Todos</option>
+                    <% [...new Set(equipos.map(e => e.tipo))].forEach(tipo => { %>
+                        <option value="<%= tipo %>"><%= tipo.charAt(0).toUpperCase() + tipo.slice(1).toLowerCase() %></option>
+                    <% }); %>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="">Usuario</label>
+                <select class="form-select" id="usuarioFilter" aria-placeholder="Usuario">
+                    <option value="">Todos</option>
+                    <option value="No Asignado">No Asignado</option>
+                    <% [...new Set(equipos.filter(e => e.usuario_nombre).map(e => e.usuario_nombre))].forEach(usuario => { %>
+                        <option value="<%= usuario %>"><%= usuario %></option>
+                    <% }); %>
+                </select>
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <button class="btn btn-secondary" id="resetFilters">Reiniciar Filtros</button>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Tipo</th>
+                        <th>Marca</th>
+                        <th>Modelo</th>
+                        <th>Serial</th>
+                        <th>Estado</th>
+                        <th>Usuario Asignado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% equipos.forEach(function(equipo) { %>
+                        <tr>
+                            <td><%= equipo.id_equipo %></td>
+                            <td><%= equipo.nombre.split(' ').map(function(palabra) {
+                                return palabra.charAt(0).toUpperCase() + palabra.slice(1).toLowerCase();
+                            }).join(' ') %></td>
+                            <td><%= equipo.tipo.charAt(0).toUpperCase() + equipo.tipo.slice(1).toLowerCase() %></td>
+                            <td><%= equipo.marca.charAt(0).toUpperCase() + equipo.marca.slice(1).toLowerCase() %></td>
+                            <td><%= equipo.modelo.charAt(0).toUpperCase() + equipo.modelo.slice(1).toLowerCase() %></td>
+                            <td><%= equipo.numero_serie.toUpperCase() %></td>
+                            <td>
+                                <span class="badge bg-<%= equipo.estado === 'disponible' ?  'success' : 
+                                                        equipo.estado === 'asignado' ? 'primary' : 
+                                                        equipo.estado === 'en_reparacion' ? 'warning' : 'danger' %>">
+                                    <%= equipo.estado === 'disponible' ? 'Disponible' :
+                                        equipo.estado === 'asignado' ? 'Asignado' :
+                                        equipo.estado === 'en_reparacion' ? 'En Reparación' :
+                                        'Dado de Baja' %>
+                                </span>
+                            </td>
+                            <td><%= (equipo.usuario_nombre && equipo.usuario_nombre.split(' ').map(function(palabra) {
+                                return palabra.charAt(0).toUpperCase() + palabra.slice(1).toLowerCase();
+                            }).join(' ')) || 'No Asignado' %></td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+</div>
+
+

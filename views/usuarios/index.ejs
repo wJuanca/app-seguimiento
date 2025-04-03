@@ -14,7 +14,7 @@
   <main class="container mt-5">
       <div class="d-flex justify-content-between align-items-center mb-4">
           <h1 class="mb-0">Gestión de Usuarios</h1>
-          <a href="/crear" class="btn btn-success">
+          <a href="/usuarios/crear" class="btn btn-success">
               <i class="bi bi-plus-circle me-2"></i>Crear Usuario
           </a>
       </div>
@@ -64,13 +64,13 @@
                                       </td>
                                       <td>
                                           <div class="d-flex gap-2">
-                                              <a href="/ver/<%= usuario.id_usuario %>" class="btn btn-sm btn-outline-primary" title="Ver">
+                                              <a href="/usuarios/ver/<%= usuario.id_usuario %>" class="btn btn-sm btn-outline-primary" title="Ver">
                                                   <i class="bi bi-eye"></i>
                                               </a>
-                                              <a href="/editar/<%= usuario.id_usuario %>" class="btn btn-sm btn-outline-warning" title="Editar">
+                                              <a href="/usuarios/editar/<%= usuario.id_usuario %>" class="btn btn-sm btn-outline-warning" title="Editar">
                                                   <i class="bi bi-pencil"></i>
                                               </a>
-                                              <a href="/eliminar/<%= usuario.id_usuario %>" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                                              <a href="/usuarios/eliminar/<%= usuario.id_usuario %>" class="btn btn-sm btn-outline-danger" title="Eliminar">
                                                   <i class="bi bi-trash"></i>
                                               </a>
                                           </div>
