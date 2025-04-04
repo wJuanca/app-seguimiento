@@ -59,6 +59,7 @@ const reparacionesRoutes = require("./routes/reparaciones")
 const asignacionesRoutes = require("./routes/asignaciones")
 const miEquipoRoutes = require("./routes/mi-equipo")
 const reportesRoutes = require("./routes/reportes")
+const bitacorasRoutes = require("./routes/bitacoras")
 
 // Usar las rutas principales
 app.use("/auth", authRoutes)
@@ -70,6 +71,7 @@ app.use("/reparaciones", verificarAutenticacion, verificarRol(["admin", "tecnico
 app.use("/asignaciones", verificarAutenticacion, verificarRol(["admin", "tecnico"]), asignacionesRoutes)
 app.use("/mi-equipo", verificarAutenticacion, verificarRol(["usuario_final"]), miEquipoRoutes)
 app.use("/reportes", verificarAutenticacion, verificarRol(["admin"]), reportesRoutes)
+app.use("/bitacoras", verificarAutenticacion, verificarRol(["admin", "tecnico"]), bitacorasRoutes)
 
 // Iniciar el servidor
 const PORT = process.env.PORT || 5000

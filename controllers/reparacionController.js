@@ -1,5 +1,8 @@
 const conexion = require("../database/db")
 
+// Agregar:
+const bitacorasController = require("./bitacorasController")
+
 //Mostramos todas las repaciones disponibles
 exports.mostrarReparaciones = (req, res) => {
   // Con esta consulta obtenemos todas las repaciones con informacion de equipos, usuarios y tecnicos
@@ -116,6 +119,16 @@ exports.asignarTecnico = (req, res) => {
         return res.redirect(`/reparaciones/detalles/${id_reparacion}`)
       }
 
+      // Agregar este código para registrar en bitácora:
+      bitacorasController.registrarEvento(
+        "reparacion",
+        id_reparacion,
+        "reparaciones",
+        `Técnico asignado a la reparación #${id_reparacion}`,
+        req.session.usuario.id,
+        { cambios: { tecnico_id, estado: "en_proceso" } },
+      )
+
       req.flash("success", "Técnico asignado correctamente")
       res.redirect(`/reparaciones/detalles/${id_reparacion}`)
     },
@@ -137,6 +150,16 @@ exports.tomarCaso = (req, res) => {
         req.flash("error", "Error al tomar el caso")
         return res.redirect(`/reparaciones/detalles/${id_reparacion}`)
       }
+
+      // Agregar este código para registrar en bitácora:
+      bitacorasController.registrarEvento(
+        "reparacion",
+        id_reparacion,
+        "reparaciones",
+        `Técnico #${tecnico_id} tomó el caso de reparación #${id_reparacion}`,
+        req.session.usuario.id,
+        { cambios: { tecnico_id, estado: "en_proceso" } },
+      )
 
       req.flash("success", "Has tomado el caso correctamente")
       res.redirect(`/reparaciones/detalles/${id_reparacion}`)
@@ -210,6 +233,22 @@ exports.completarReparacion = (req, res) => {
                     res.redirect(`/reparaciones/detalles/${id_reparacion}`)
                   })
                 }
+
+                // Agregar este código para registrar en bitácora:
+                bitacorasController.registrarEvento(
+                  "reparacion",
+                  id_reparacion,
+                  "reparaciones",
+                  `Reparación #${id_reparacion} completada`,
+                  req.session.usuario.id,
+                  {
+                    cambios: {
+                      estado: "reparado",
+                      solucion_aplicada,
+                      equipo_estado: nuevoEstado,
+                    },
+                  },
+                )
 
                 req.flash("success", "Reparación completada correctamente")
                 res.redirect("/reparaciones")
@@ -286,6 +325,22 @@ exports.descartarReparacion = (req, res) => {
                   })
                 }
 
+                // Agregar este código para registrar en bitácora:
+                bitacorasController.registrarEvento(
+                  "reparacion",
+                  id_reparacion,
+                  "reparaciones",
+                  `Reparación #${id_reparacion} descartada`,
+                  req.session.usuario.id,
+                  {
+                    cambios: {
+                      estado: "descartado",
+                      motivo_descarte,
+                      equipo_estado: "dado_de_baja",
+                    },
+                  },
+                )
+
                 req.flash("success", "Equipo descartado correctamente")
                 res.redirect("/reparaciones")
               })
@@ -324,7 +379,7 @@ exports.crearReparacion = (req, res) => {
       return res.redirect("/reparaciones")
     }
 
-    //insetamos la repacion 
+    //insetamos la repacion
     conexion.query("INSERT INTO reparaciones SET ?", nuevaReparacion, (error, resultado) => {
       if (error) {
         return conexion.rollback(() => {
@@ -437,7 +492,6 @@ exports.saveReparacion = (req, res) => {
             })
           }
 
-
           // confirmamos la transaccion
           conexion.commit((err) => {
             if (err) {
@@ -447,6 +501,24 @@ exports.saveReparacion = (req, res) => {
                 res.redirect("/reparaciones")
               })
             }
+
+            // Agregar este código para registrar en bitácora:
+            bitacorasController.registrarEvento(
+              "reparacion",
+              resultado.insertId,
+              "reparaciones",
+              `Nueva reparación creada para el equipo #${equipo_id}`,
+              req.session.usuario.id,
+              {
+                datos: {
+                  equipo_id,
+                  usuario_solicitante_id,
+                  tecnico_id,
+                  descripcion_problema,
+                  estado,
+                },
+              },
+            )
 
             req.flash("success", "Reparación creada correctamente")
             res.redirect("/reparaciones")
@@ -584,6 +656,19 @@ exports.updateReparacion = (req, res) => {
                       })
                     }
 
+                    // Agregar este código para registrar en bitácora:
+                    bitacorasController.registrarEvento(
+                      "reparacion",
+                      id_reparacion,
+                      "reparaciones",
+                      `Reparación #${id_reparacion} actualizada`,
+                      req.session.usuario.id,
+                      {
+                        cambios: datosActualizacion,
+                        estado_anterior: estadoAnterior,
+                      },
+                    )
+
                     req.flash("success", "Reparación actualizada correctamente")
                     res.redirect("/reparaciones")
                   })
@@ -669,6 +754,19 @@ exports.deleteReparacion = (req, res) => {
                       res.redirect("/reparaciones")
                     })
                   }
+
+                  // Agregar este código para registrar en bitácora:
+                  bitacorasController.registrarEvento(
+                    "reparacion",
+                    id_reparacion,
+                    "reparaciones",
+                    `Reparación #${id_reparacion} eliminada`,
+                    req.session.usuario.id,
+                    {
+                      estado_anterior: estadoReparacion,
+                      equipo_id,
+                    },
+                  )
 
                   req.flash("success", "Reparación eliminada correctamente")
                   res.redirect("/reparaciones")

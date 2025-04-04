@@ -18,3 +18,4 @@ router.get("/eliminar/:id", equipoController.eliminarEquipo);
 
 
 module.exports = router;
+

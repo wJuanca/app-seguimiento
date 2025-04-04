@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipos - Bitácoras</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <%- include('../partials/header.ejs') %>
+    
+    <main class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-0">Historial de Equipos</h1>
+            <a href="/bitacoras" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-2"></i>Volver
+            </a>
+        </div>
+        
+        <% if (mensajes.success) { %>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <%= mensajes.success %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+            </div>
+        <% } %>
+        
+        <% if (mensajes.error) { %>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <%= mensajes.error %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+            </div>
+        <% } %>
+        
+        <!-- Tabla de equipos -->
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="card-title mb-0">Equipos del Sistema</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Marca/Modelo</th>
+                                <th>Tipo</th>
+                                <th>Estado</th>
+                                <th>Total Reparaciones</th>
+                                <th>Completadas</th>
+                                <th>Última Reparación</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (equipos && equipos.length > 0) { %>
+                                <% equipos.forEach(equipo => { %>
+                                    <tr>
+                                        <td><%= equipo.id_equipo %></td>
+                                        <td><%= equipo.nombre %></td>
+                                        <td><%= equipo.marca %> <%= equipo.modelo %></td>
+                                        <td><%= equipo.tipo %></td>
+                                        <td>
+                                            <% if (equipo.estado === 'disponible') { %>
+                                                <span class="badge bg-success">Disponible</span>
+                                            <% } else if (equipo.estado === 'asignado') { %>
+                                                <span class="badge bg-primary">Asignado</span>
+                                            <% } else if (equipo.estado === 'en_reparacion') { %>
+                                                <span class="badge bg-warning text-dark">En Reparación</span>
+                                            <% } else if (equipo.estado === 'dado_de_baja') { %>
+                                                <span class="badge bg-danger">Dado de Baja</span>
+                                            <% } else { %>
+                                                <span class="badge bg-secondary"><%= equipo.estado %></span>
+                                            <% } %>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="badge bg-primary rounded-pill"><%= equipo.total_reparaciones || 0 %></span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="badge bg-success rounded-pill"><%= equipo.reparaciones_completadas || 0 %></span>
+                                        </td>
+                                        <td>
+                                            <% if (equipo.ultima_reparacion) { %>
+                                                <%= new Date(equipo.ultima_reparacion).toLocaleDateString() %>
+                                            <% } else { %>
+                                                <span class="text-muted">Nunca</span>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a href="/bitacoras/equipos/<%= equipo.id_equipo %>" class="btn btn-sm btn-outline-warning">
+                                                    <i class="bi bi-eye me-1"></i>Ver Historial
+                                                </a>
+                                                <a href="/bitacoras/reporte?tipo=equipo&id=<%= equipo.id_equipo %>" class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-file-earmark-pdf"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="9" class="text-center py-4">
+                                        <i class="bi bi-info-circle me-2"></i>No hay equipos registrados
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

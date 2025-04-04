@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial del Equipo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <%- include('../partials/header.ejs') %>
+    
+    <main class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-0">Historial del Equipo: <%= equipo.nombre %></h1>
+            <div>
+                <a href="/bitacoras/reporte?tipo=equipo&id=<%= equipo.id_equipo %>" class="btn btn-outline-primary me-2">
+                    <i class="bi bi-file-earmark-pdf me-2"></i>Generar Reporte
+                </a>
+                <a href="/bitacoras/equipos" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-2"></i>Volver
+                </a>
+            </div>
+        </div>
+        
+        <!-- Tarjeta de información del equipo -->
+        <div class="card mb-4">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="card-title mb-0">Información del Equipo</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="avatar-container bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 80px; height: 80px;">
+                                <i class="bi bi-pc-display" style="font-size: 2.5rem;"></i>
+                            </div>
+                            <div>
+                                <h4 class="mb-1"><%= equipo.nombre %></h4>
+                                <p class="text-muted mb-0"><%= equipo.marca %> <%= equipo.modelo %></p>
+                                <p class="mb-0">
+                                    <% if (equipo.estado === 'disponible') { %>
+                                        <span class="badge bg-success">Disponible</span>
+                                    <% } else if (equipo.estado === 'asignado') { %>
+                                        <span class="badge bg-primary">Asignado</span>
+                                    <% } else if (equipo.estado === 'en_reparacion') { %>
+                                        <span class="badge bg-warning text-dark">En Reparación</span>
+                                    <% } else if (equipo.estado === 'dado_de_baja') { %>
+                                        <span class="badge bg-danger">Dado de Baja</span>
+                                    <% } else { %>
+                                        <span class="badge bg-secondary"><%= equipo.estado %></span>
+                                    <% } %>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <p class="mb-1"><strong>Tipo:</strong> <%= equipo.tipo %></p>
+                            <p class="mb-1"><strong>Número de Serie:</strong> <%= equipo.numero_serie || 'No registrado' %></p>
+                            <% if (usuario) { %>
+                                <p class="mb-1"><strong>Asignado a:</strong> <%= usuario.nombre %></p>
+                                <p class="mb-0"><strong>Correo:</strong> <%= usuario.correo %></p>
+                            <% } else if (equipo.estado === 'asignado') { %>
+                                <p class="mb-0"><strong>Asignado a:</strong> <span class="text-muted">Usuario no disponible</span></p>
+                            <% } %>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h3 class="mb-0 text-primary"><%= estadisticas ? estadisticas.total_reparaciones || 0 : 0 %></h3>
+                                        <p class="text-muted mb-0">Total Reparaciones</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h3 class="mb-0 text-success"><%= estadisticas ? estadisticas.reparaciones_completadas || 0 : 0 %></h3>
+                                        <p class="text-muted mb-0">Reparaciones Completadas</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h3 class="mb-0 text-danger"><%= estadisticas ? estadisticas.reparaciones_descartadas || 0 : 0 %></h3>
+                                        <p class="text-muted mb-0">Reparaciones Descartadas</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Última Reparación</h5>
+                                        <% if (estadisticas && estadisticas.ultima_reparacion) { %>
+                                            <p class="mb-0">Fecha: <%= new Date(estadisticas.ultima_reparacion).toLocaleDateString() %></p>
+                                        <% } else { %>
+                                            <p class="text-muted mb-0">No hay reparaciones registradas</p>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Historial de actividades -->
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="card-title mb-0">Historial de Actividades</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Tipo</th>
+                                <th>Descripción</th>
+                                <th>Técnico</th>
+                                <th>Estado</th>
+                                <th>Solución/Cambios</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (bitacoras && bitacoras.length > 0) { %>
+                                <% bitacoras.forEach(bitacora => { %>
+                                    <tr>
+                                        <td><%= new Date(bitacora.fecha_registro).toLocaleString() %></td>
+                                        <td>
+                                            <% if (bitacora.tipo_evento === 'reparacion') { %>
+                                                <span class="badge bg-success">Reparación</span>
+                                            <% } else if (bitacora.tipo_evento === 'equipo') { %>
+                                                <span class="badge bg-warning text-dark">Equipo</span>
+                                            <% } else { %>
+                                                <span class="badge bg-secondary"><%= bitacora.tipo_evento %></span>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <div class="text-truncate" style="max-width: 250px;" title="<%= bitacora.descripcion %>">
+                                                <%= bitacora.descripcion %>
+                                            </div>
+                                        </td>
+                                        <td><%= bitacora.nombre_tecnico || 'N/A' %></td>
+                                        <td>
+                                            <% if (bitacora.estado_reparacion === 'pendiente') { %>
+                                                <span class="badge bg-warning">Pendiente</span>
+                                            <% } else if (bitacora.estado_reparacion === 'en_proceso') { %>
+                                                <span class="badge bg-primary">En Proceso</span>
+                                            <% } else if (bitacora.estado_reparacion === 'reparado') { %>
+                                                <span class="badge bg-success">Reparado</span>
+                                            <% } else if (bitacora.estado_reparacion === 'descartado') { %>
+                                                <span class="badge bg-danger">Descartado</span>
+                                            <% } else { %>
+                                                <span class="badge bg-secondary">N/A</span>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <% if (bitacora.solucion_aplicada) { %>
+                                                <button class="btn btn-sm btn-outline-success" type="button" data-bs-toggle="collapse" data-bs-target="#solucion-<%= bitacora.id_bitacora %>" aria-expanded="false">
+                                                    Ver Solución
+                                                </button>
+                                                <div class="collapse mt-2" id="solucion-<%= bitacora.id_bitacora %>">
+                                                    <div class="card card-body">
+                                                        <%= bitacora.solucion_aplicada %>
+                                                    </div>
+                                                </div>
+                                            <% } else if (bitacora.cambios) { %>
+                                                <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#cambios-<%= bitacora.id_bitacora %>" aria-expanded="false">
+                                                    Ver Cambios
+                                                </button>
+                                                <div class="collapse mt-2" id="cambios-<%= bitacora.id_bitacora %>">
+                                                    <div class="card card-body">
+                                                        <pre class="mb-0"><%= bitacora.cambios %></pre>
+                                                    </div>
+                                                </div>
+                                            <% } else { %>
+                                                <span class="text-muted">No disponible</span>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <% if (bitacora.tipo_evento === 'reparacion') { %>
+                                                <a href="/reparaciones/detalles/<%= bitacora.id_referencia %>" class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                            <% } else { %>
+                                                <a href="/equipos/editar/<%= equipo.id_equipo %>" class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                            <% } %>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="7" class="text-center py-4">
+                                        <i class="bi bi-info-circle me-2"></i>No hay actividades registradas
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

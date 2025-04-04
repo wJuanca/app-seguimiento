@@ -1,19 +1,22 @@
-const mysql = require('mysql2');
+const mysql = require("mysql2")
 
 const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '1508',
-    database: 'GestionEquipos'
-});
+  host: "localhost",
+  user: "root",
+  password: "1508",
+  database: "GestionEquipos",
+})
 
 // Conectar a la base de datos
 connection.connect((err) => {
-    if (err) {
-        console.error('Error al conectar a la base de datos:', err);
-        return;
-    }
-    console.log('Conexión exitosa a la base de datos.');
-});
+  if (err) {
+    console.error("Error al conectar a la base de datos:", err)
+    return
+  }
+  console.log("Conexión exitosa a la base de datos.")
+})
 
-module.exports = connection;
+module.exports = connection
+// Agregar esta línea para exportar la versión con promesas
+module.exports.promise = connection.promise()
+

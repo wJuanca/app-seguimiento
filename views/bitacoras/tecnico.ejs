@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actividad del Técnico</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <%- include('../partials/header.ejs') %>
+    
+    <main class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-0">Actividad del Técnico: <%= tecnico.nombre %></h1>
+            <div>
+                <a href="/bitacoras/reporte?tipo=tecnico&id=<%= tecnico.id_usuario %>" class="btn btn-outline-primary me-2">
+                    <i class="bi bi-file-earmark-pdf me-2"></i>Generar Reporte
+                </a>
+                <a href="/bitacoras/tecnicos" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-2"></i>Volver
+                </a>
+            </div>
+        </div>
+        
+        <!-- Tarjeta de información del técnico -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="card-title mb-0">Información del Técnico</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="avatar-container bg-info text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 80px; height: 80px;">
+                                <i class="bi bi-person-gear" style="font-size: 2.5rem;"></i>
+                            </div>
+                            <div>
+                                <h4 class="mb-1"><%= tecnico.nombre %></h4>
+                                <p class="text-muted mb-0"><%= tecnico.correo %></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h3 class="mb-0 text-primary"><%= estadisticas ? estadisticas.total_reparaciones || 0 : 0 %></h3>
+                                        <p class="text-muted mb-0">Total Reparaciones</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h3 class="mb-0 text-success"><%= estadisticas ? estadisticas.reparaciones_completadas || 0 : 0 %></h3>
+                                        <p class="text-muted mb-0">Completadas</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h3 class="mb-0 text-warning"><%= estadisticas ? estadisticas.reparaciones_en_proceso || 0 : 0 %></h3>
+                                        <p class="text-muted mb-0">En Proceso</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h3 class="mb-0 text-info"><%= estadisticas && estadisticas.promedio_dias ? parseFloat(estadisticas.promedio_dias).toFixed(1) : 'N/A' %></h3>
+                                        <p class="text-muted mb-0">Días Promedio</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Historial de actividades -->
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="card-title mb-0">Historial de Actividades</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Equipo</th>
+                                <th>Descripción</th>
+                                <th>Estado</th>
+                                <th>Cambios</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (bitacoras && bitacoras.length > 0) { %>
+                                <% bitacoras.forEach(bitacora => { %>
+                                    <tr>
+                                        <td><%= new Date(bitacora.fecha_registro).toLocaleString() %></td>
+                                        <td>
+                                            <% if (bitacora.nombre_equipo) { %>
+                                                <%= bitacora.nombre_equipo %><br>
+                                                <small class="text-muted"><%= bitacora.marca %> <%= bitacora.modelo %></small>
+                                            <% } else { %>
+                                                <span class="text-muted">No disponible</span>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <div class="text-truncate" style="max-width: 250px;" title="<%= bitacora.descripcion %>">
+                                                <%= bitacora.descripcion %>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <% if (bitacora.estado_reparacion === 'pendiente') { %>
+                                                <span class="badge bg-warning">Pendiente</span>
+                                            <% } else if (bitacora.estado_reparacion === 'en_proceso') { %>
+                                                <span class="badge bg-primary">En Proceso</span>
+                                            <% } else if (bitacora.estado_reparacion === 'reparado') { %>
+                                                <span class="badge bg-success">Reparado</span>
+                                            <% } else if (bitacora.estado_reparacion === 'descartado') { %>
+                                                <span class="badge bg-danger">Descartado</span>
+                                            <% } else { %>
+                                                <span class="badge bg-secondary">Desconocido</span>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <% if (bitacora.cambios) { %>
+                                                <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#cambios-<%= bitacora.id_bitacora %>" aria-expanded="false">
+                                                    Ver Cambios
+                                                </button>
+                                                <div class="collapse mt-2" id="cambios-<%= bitacora.id_bitacora %>">
+                                                    <div class="card card-body">
+                                                        <pre class="mb-0"><%= bitacora.cambios %></pre>
+                                                    </div>
+                                                </div>
+                                            <% } else { %>
+                                                <span class="text-muted">No hay cambios</span>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <a href="/reparaciones/detalles/<%= bitacora.id_referencia %>" class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="6" class="text-center py-4">
+                                        <i class="bi bi-info-circle me-2"></i>No hay actividades registradas
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

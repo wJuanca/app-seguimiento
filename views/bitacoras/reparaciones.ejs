@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitácora de Reparaciones</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <%- include('../partials/header.ejs') %>
+    
+    <main class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-0">Bitácora de Reparaciones</h1>
+            <div>
+                <a href="/bitacoras/reporte?tipo=reparaciones" class="btn btn-outline-primary me-2">
+                    <i class="bi bi-file-earmark-pdf me-2"></i>Generar Reporte
+                </a>
+                <a href="/bitacoras" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-2"></i>Volver
+                </a>
+            </div>
+        </div>
+        
+        <% if (mensajes.success) { %>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <%= mensajes.success %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+            </div>
+        <% } %>
+        
+        <% if (mensajes.error) { %>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <%= mensajes.error %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+            </div>
+        <% } %>
+        
+        <!-- Filtros -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="card-title mb-0">Filtrar Reparaciones</h5>
+            </div>
+            <div class="card-body">
+                <form action="/bitacoras/reparaciones" method="GET" class="row g-3">
+                    <div class="col-md-3">
+                        <label for="equipo" class="form-label">Equipo</label>
+                        <select name="equipo" id="equipo" class="form-select">
+                            <option value="">Todos</option>
+                            <% equipos.forEach(equipo => { %>
+                                <option value="<%= equipo.id_equipo %>" <%= filtros.equipoId == equipo.id_equipo ? 'selected' : '' %>>
+                                    <%= equipo.nombre %> (<%= equipo.marca %> <%= equipo.modelo %>)
+                                </option>
+                            <% }); %>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="tecnico" class="form-label">Técnico</label>
+                        <select name="tecnico" id="tecnico" class="form-select">
+                            <option value="">Todos</option>
+                            <% tecnicos.forEach(tecnico => { %>
+                                <option value="<%= tecnico.id_usuario %>" <%= filtros.tecnicoId == tecnico.id_usuario ? 'selected' : '' %>>
+                                    <%= tecnico.nombre %>
+                                </option>
+                            <% }); %>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="estado" class="form-label">Estado</label>
+                        <select name="estado" id="estado" class="form-select">
+                            <option value="">Todos</option>
+                            <% estados.forEach(estado => { %>
+                                <option value="<%= estado %>" <%= filtros.estado === estado ? 'selected' : '' %>>
+                                    <%= estado.replace('_', ' ') %>
+                                </option>
+                            <% }); %>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="fechaInicio" class="form-label">Fecha Inicio</label>
+                        <input type="date" class="form-control" id="fechaInicio" name="fechaInicio" value="<%= filtros.fechaInicio %>">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="fechaFin" class="form-label">Fecha Fin</label>
+                        <input type="date" class="form-control" id="fechaFin" name="fechaFin" value="<%= filtros.fechaFin %>">
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-filter me-2"></i>Filtrar
+                        </button>
+                        <a href="/bitacoras/reparaciones" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-circle me-2"></i>Limpiar Filtros
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Tabla de bitácoras de reparaciones -->
+        <div class="card">
+            <div class="card-header bg-light">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Historial de Reparaciones</h5>
+                    <span class="badge bg-success">Total: <%= paginacion.totalRegistros %></span>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Equipo</th>
+                                <th>Problema</th>
+                                <th>Técnico</th>
+                                <th>Estado</th>
+                                <th>Fecha</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (bitacoras && bitacoras.length > 0) { %>
+                                <% bitacoras.forEach(bitacora => { %>
+                                    <tr>
+                                        <td><%= bitacora.id_referencia %></td>
+                                        <td>
+                                            <% if (bitacora.nombre_equipo) { %>
+                                                <%= bitacora.nombre_equipo %><br>
+                                                <small class="text-muted"><%= bitacora.marca %> <%= bitacora.modelo %></small>
+                                            <% } else { %>
+                                                <span class="text-muted">No disponible</span>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <% if (bitacora.descripcion_problema) { %>
+                                                <div class="text-truncate" style="max-width: 200px;" title="<%= bitacora.descripcion_problema %>">
+                                                    <%= bitacora.descripcion_problema %>
+                                                </div>
+                                            <% } else { %>
+                                                <span class="text-muted">No disponible</span>
+                                            <% } %>
+                                        </td>
+                                        <td><%= bitacora.nombre_tecnico || 'No asignado' %></td>
+                                        <td>
+                                            <% if (bitacora.estado_reparacion === 'pendiente') { %>
+                                                <span class="badge bg-warning">Pendiente</span>
+                                            <% } else if (bitacora.estado_reparacion === 'en_proceso') { %>
+                                                <span class="badge bg-primary">En Proceso</span>
+                                            <% } else if (bitacora.estado_reparacion === 'reparado') { %>
+                                                <span class="badge bg-success">Reparado</span>
+                                            <% } else if (bitacora.estado_reparacion === 'descartado') { %>
+                                                <span class="badge bg-danger">Descartado</span>
+                                            <% } else { %>
+                                                <span class="badge bg-secondary">Desconocido</span>
+                                            <% } %>
+                                        </td>
+                                        <td><%= new Date(bitacora.fecha_registro).toLocaleString() %></td>
+                                        <td>
+                                            <a href="/reparaciones/detalles/<%= bitacora.id_referencia %>" class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="7" class="text-center py-4">
+                                        <i class="bi bi-info-circle me-2"></i>No hay registros que mostrar
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer">
+                <% if (paginacion.totalPaginas > 1) { %>
+                    <nav aria-label="Paginación de reparaciones">
+                        <ul class="pagination justify-content-center mb-0">
+                            <li class="page-item <%= paginacion.pagina === 1 ? 'disabled' : '' %>">
+                                <a class="page-link" href="/bitacoras/reparaciones?page=<%= paginacion.pagina - 1 %>&equipo=<%= filtros.equipoId %>&tecnico=<%= filtros.tecnicoId %>&estado=<%= filtros.estado %>&fechaInicio=<%= filtros.fechaInicio %>&fechaFin=<%= filtros.fechaFin %>">Anterior</a>
+                            </li>
+                            
+                            <% for(let i = 1; i <= paginacion.totalPaginas; i++) { %>
+                                <% if (i === 1 || i === paginacion.totalPaginas || (i >= paginacion.pagina - 2 && i <= paginacion.pagina + 2)) { %>
+                                    <li class="page-item <%= paginacion.pagina === i ? 'active' : '' %>">
+                                        <a class="page-link" href="/bitacoras/reparaciones?page=<%= i %>&equipo=<%= filtros.equipoId %>&tecnico=<%= filtros.tecnicoId %>&estado=<%= filtros.estado %>&fechaInicio=<%= filtros.fechaInicio %>&fechaFin=<%= filtros.fechaFin %>"><%= i %></a>
+                                    </li>
+                                <% } else if (i === paginacion.pagina - 3 || i === paginacion.pagina + 3) { %>
+                                    <li class="page-item disabled">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                <% } %>
+                            <% } %>
+                            
+                            <li class="page-item <%= paginacion.pagina === paginacion.totalPaginas ? 'disabled' : '' %>">
+                                <a class="page-link" href="/bitacoras/reparaciones?page=<%= paginacion.pagina + 1 %>&equipo=<%= filtros.equipoId %>&tecnico=<%= filtros.tecnicoId %>&estado=<%= filtros.estado %>&fechaInicio=<%= filtros.fechaInicio %>&fechaFin=<%= filtros.fechaFin %>">Siguiente</a>
+                            </li>
+                        </ul>
+                    </nav>
+                <% } %>
+            </div>
+        </div>
+    </main>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
