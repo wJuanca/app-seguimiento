@@ -1,203 +1,212 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventario de Equipos</title>
-    <!-- Bootstrap 5.3 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/main.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventario de Equipos</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-    <%- include('../partials/header.ejs') %>
+  <%- include('../partials/header.ejs') %>
+  
+  <main class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="mb-0 fs-2">Inventario de Equipos</h1>
+      <a href="/equipos/crear" class="btn btn-success">
+        <i class="bi bi-plus-circle me-2"></i>Nuevo Equipo
+      </a>
+    </div>
     
-    <main class="container mt-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="mb-0">Inventario de Equipos</h1>
-            <a href="/equipos/crear" class="btn btn-success">
-                <i class="bi bi-plus-circle me-2"></i>Nuevo Equipo
+    <!-- Filtros Card -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-primary text-white">
+        <h5 class="card-title mb-0">Filtros de Búsqueda</h5>
+      </div>
+      <div class="card-body">
+        <form action="/equipos" method="GET">
+          <div class="row g-3">
+            <div class="col-md-3">
+              <label class="form-label">Buscar</label>
+              <input type="text" name="busqueda" class="form-control" placeholder="Nombre/Modelo/Serie" value="<%= filtros?.busqueda || '' %>">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Marca</label>
+              <select name="marca" class="form-select">
+                <option value="">Todas las marcas</option>
+                <% if (typeof marcas !== 'undefined') { %>
+                  <% marcas.forEach(marca => { %>
+                    <option value="<%= marca %>" <%= filtros?.marca === marca ? 'selected' : '' %>><%= marca %></option>
+                  <% }) %>
+                <% } %>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Tipo</label>
+              <select name="tipo" class="form-select">
+                <option value="">Todos los tipos</option>
+                <option value="laptop" <%= filtros?.tipo === 'laptop' ? 'selected' : '' %>>Laptop</option>
+                <option value="desktop" <%= filtros?.tipo === 'desktop' ? 'selected' : '' %>>Desktop</option>
+                <option value="impresora" <%= filtros?.tipo === 'impresora' ? 'selected' : '' %>>Impresora</option>
+                <option value="servidor" <%= filtros?.tipo === 'servidor' ? 'selected' : '' %>>Servidor</option>
+                <option value="otro" <%= filtros?.tipo === 'otro' ? 'selected' : '' %>>Otro</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Estado</label>
+              <select name="estado" class="form-select">
+                <option value="">Todos los estados</option>
+                <option value="disponible" <%= filtros?.estado === 'disponible' ? 'selected' : '' %>>Disponible</option>
+                <option value="asignado" <%= filtros?.estado === 'asignado' ? 'selected' : '' %>>Asignado</option>
+                <option value="en_reparacion" <%= filtros?.estado === 'en_reparacion' ? 'selected' : '' %>>En Reparación</option>
+                <option value="dado_de_baja" <%= filtros?.estado === 'dado_de_baja' ? 'selected' : '' %>>Dado de Baja</option>
+              </select>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end gap-2 mt-3">
+            <a href="/equipos" class="btn btn-outline-secondary">
+              <i class="bi bi-x-circle me-1"></i>Limpiar filtros
             </a>
-        </div>
-        
-        <!-- Filtros Card -->
-        <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
-                <h5 class="card-title mb-0">Filtros de Búsqueda</h5>
-            </div>
-            <div class="card-body">
-                <form action="/equipos" method="GET">
-                    <div class="row g-3">
-                        <div class="col-md-3">
-                            <label class="form-label">Buscar</label>
-                            <input type="text" name="busqueda" class="form-control" placeholder="Nombre/Modelo/Serie" value="<%= filtros?.busqueda || '' %>">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Marca</label>
-                            <select name="marca" class="form-select">
-                                <option value="">Todas las marcas</option>
-                                <% if (typeof marcas !== 'undefined') { %>
-                                    <% marcas.forEach(marca => { %>
-                                        <option value="<%= marca %>" <%= filtros?.marca === marca ? 'selected' : '' %>><%= marca %></option>
-                                    <% }) %>
-                                <% } %>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Tipo</label>
-                            <select name="tipo" class="form-select">
-                                <option value="">Todos los tipos</option>
-                                <option value="laptop" <%= filtros?.tipo === 'laptop' ? 'selected' : '' %>>Laptop</option>
-                                <option value="desktop" <%= filtros?.tipo === 'desktop' ? 'selected' : '' %>>Desktop</option>
-                                <option value="impresora" <%= filtros?.tipo === 'impresora' ? 'selected' : '' %>>Impresora</option>
-                                <option value="servidor" <%= filtros?.tipo === 'servidor' ? 'selected' : '' %>>Servidor</option>
-                                <option value="otro" <%= filtros?.tipo === 'otro' ? 'selected' : '' %>>Otro</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Estado</label>
-                            <select name="estado" class="form-select">
-                                <option value="">Todos los estados</option>
-                                <option value="disponible" <%= filtros?.estado === 'disponible' ? 'selected' : '' %>>Disponible</option>
-                                <option value="asignado" <%= filtros?.estado === 'asignado' ? 'selected' : '' %>>Asignado</option>
-                                <option value="en_reparacion" <%= filtros?.estado === 'en_reparacion' ? 'selected' : '' %>>En Reparación</option>
-                                <option value="dado_de_baja" <%= filtros?.estado === 'dado_de_baja' ? 'selected' : '' %>>Dado de Baja</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-end gap-2 mt-3">
-                        <a href="/equipos" class="btn btn-outline-secondary">Limpiar filtros</a>
-                        <button type="submit" class="btn btn-primary">Aplicar filtros</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Tabla de equipos -->
-        <div class="card">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead class="table-primary">
-                            <tr>
-                                <th>ID</th>
-                                <th>Nombre</th>
-                                <th>Tipo</th>
-                                <th>Marca</th>
-                                <th>Modelo</th>
-                                <th class="d-none d-md-table-cell">Número de Serie</th>
-                                <th>Estado</th>
-                                <th class="d-none d-lg-table-cell">Usuario Asignado</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% if (typeof equipos !== 'undefined' && equipos.length > 0) { %>
-                                <% equipos.forEach(equipo => { %>
-                                    <tr>
-                                        <td><%= equipo.id_equipo %></td>
-                                        <td><%= equipo.nombre %></td>
-                                        <td><%= equipo.tipo %></td>
-                                        <td><%= equipo.marca %></td>
-                                        <td><%= equipo.modelo %></td>
-                                        <td class="d-none d-md-table-cell"><%= equipo.numero_serie %></td>
-                                        <td>
-                                            <span class="badge <%= 
-                                                equipo.estado === 'disponible' ? 'estado-disponible' : 
-                                                equipo.estado === 'asignado' ? 'estado-asignado' : 
-                                                equipo.estado === 'en_reparacion' ? 'estado-reparacion' : 
-                                                'estado-baja' 
-                                            %>">
-                                                <%= equipo.estado %>
-                                            </span>
-                                        </td>
-                                        <td class="d-none d-lg-table-cell"><%= equipo.usuario_actual || 'No asignado' %></td>
-                                        <td>
-                                            <div class="d-flex gap-2">
-                                                <a href="/equipos/editar/<%= equipo.id_equipo %>" class="btn btn-sm btn-outline-warning" title="Editar">
-                                                    <i class="bi bi-pencil"></i>
-                                                </a>
-                                                <button 
-                                                    data-delete-equipo="<%= equipo.id_equipo %>" 
-                                                    data-equipo-nombre="<%= equipo.nombre %>" 
-                                                    class="btn btn-sm btn-outline-danger btn-delete" 
-                                                    title="Eliminar"
-                                                >
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                <% }) %>
-                            <% } else { %>
-                                <tr>
-                                    <td colspan="9" class="text-center">No hay equipos registrados</td>
-                                </tr>
-                            <% } %>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Modal de Confirmación de Eliminación -->
-    <div class="modal fade" id="confirmarEliminarModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Confirmar Eliminación</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    ¿Está seguro que desea eliminar el equipo <strong id="nombreEquipoEliminar"></strong>?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-danger" id="confirmarEliminarBtn">Eliminar</button>
-                </div>
-            </div>
-        </div>
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-funnel me-1"></i>Aplicar filtros
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
 
-    <!-- Bootstrap JS and Popper.js (Required for modal functionality) -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get modal elements
-            const deleteModal = new bootstrap.Modal(document.getElementById('confirmarEliminarModal'));
-            const nombreEquipoEliminar = document.getElementById('nombreEquipoEliminar');
-            const confirmarEliminarBtn = document.getElementById('confirmarEliminarBtn');
-            let equipoIdToDelete = null;
+    <!-- Tabla de equipos -->
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Tipo</th>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th class="d-none d-md-table-cell">Número de Serie</th>
+                <th>Estado</th>
+                <th class="d-none d-lg-table-cell">Usuario Asignado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (typeof equipos !== 'undefined' && equipos.length > 0) { %>
+                <% equipos.forEach(equipo => { %>
+                  <tr>
+                    <td><%= equipo.id_equipo %></td>
+                    <td><%= equipo.nombre %></td>
+                    <td><span class="badge bg-secondary"><%= equipo.tipo %></span></td>
+                    <td><%= equipo.marca %></td>
+                    <td><%= equipo.modelo %></td>
+                    <td class="d-none d-md-table-cell"><%= equipo.numero_serie %></td>
+                    <td>
+                      <span class="badge <%= 
+                        equipo.estado === 'disponible' ? 'bg-success' : 
+                        equipo.estado === 'asignado' ? 'bg-primary' : 
+                        equipo.estado === 'en_reparacion' ? 'bg-warning text-dark' : 
+                        'bg-danger' 
+                      %>">
+                        <%= equipo.estado.replace('_', ' ') %>
+                      </span>
+                    </td>
+                    <td class="d-none d-lg-table-cell"><%= equipo.usuario_actual || 'No asignado' %></td>
+                    <td>
+                      <div class="btn-group btn-group-sm">
+                        <a href="/equipos/editar/<%= equipo.id_equipo %>" class="btn btn-outline-primary" title="Editar">
+                          <i class="bi bi-pencil"></i>
+                        </a>
+                        <button 
+                          data-delete-equipo="<%= equipo.id_equipo %>" 
+                          data-equipo-nombre="<%= equipo.nombre %>" 
+                          class="btn btn-outline-danger btn-delete" 
+                          title="Eliminar"
+                        >
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } else { %>
+                <tr>
+                  <td colspan="9" class="text-center py-4">
+                    <i class="bi bi-inbox fs-1 text-muted d-block mb-2"></i>
+                    No hay equipos registrados
+                  </td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
 
-            // Add click event to all delete buttons
-            document.querySelectorAll('.btn-delete').forEach(button => {
-                button.addEventListener('click', function() {
-                    // Get equipment ID and name from data attributes
-                    equipoIdToDelete = this.getAttribute('data-delete-equipo');
-                    const equipoNombre = this.getAttribute('data-equipo-nombre');
+  <!-- Modal de Confirmación de Eliminación -->
+  <div class="modal fade" id="confirmarEliminarModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmar Eliminación</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p>¿Está seguro que desea eliminar el equipo <strong id="nombreEquipoEliminar"></strong>?</p>
+          <p class="text-muted small">Esta acción no se puede deshacer.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-danger" id="confirmarEliminarBtn">
+            <i class="bi bi-trash me-1"></i>Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-                    // Set equipment name in modal
-                    nombreEquipoEliminar.textContent = equipoNombre;
+  <!-- Bootstrap JS and Popper.js (Required for modal functionality) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get modal elements
+      const deleteModal = new bootstrap.Modal(document.getElementById('confirmarEliminarModal'));
+      const nombreEquipoEliminar = document.getElementById('nombreEquipoEliminar');
+      const confirmarEliminarBtn = document.getElementById('confirmarEliminarBtn');
+      let equipoIdToDelete = null;
 
-                    // Show modal
-                    deleteModal.show();
-                });
-            });
+      // Add click event to all delete buttons
+      document.querySelectorAll('.btn-delete').forEach(button => {
+        button.addEventListener('click', function() {
+          // Get equipment ID and name from data attributes
+          equipoIdToDelete = this.getAttribute('data-delete-equipo');
+          const equipoNombre = this.getAttribute('data-equipo-nombre');
 
-            // Add click event to confirm delete button
-            confirmarEliminarBtn.addEventListener('click', function() {
-                if (equipoIdToDelete) {
-                    // Redirect to delete route or use fetch to delete
-                    window.location.href = `/equipos/eliminar/${equipoIdToDelete}`;
-                }
-            });
+          // Set equipment name in modal
+          nombreEquipoEliminar.textContent = equipoNombre;
+
+          // Show modal
+          deleteModal.show();
         });
-    </script>
+      });
+
+      // Add click event to confirm delete button
+      confirmarEliminarBtn.addEventListener('click', function() {
+        if (equipoIdToDelete) {
+          // Redirect to delete route or use fetch to delete
+          window.location.href = `/equipos/eliminar/${equipoIdToDelete}`;
+        }
+      });
+    });
+  </script>
 </body>
 </html>
 

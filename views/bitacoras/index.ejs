@@ -1,242 +1,137 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bitácora del Sistema</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/main.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bitácoras - Sistema de Gestión</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-    <%- include('../partials/header.ejs') %>
+  <%- include('../partials/header.ejs') %>
+  
+  <main class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="mb-0 fs-2">Bitácoras del Sistema</h1>
+    </div>
     
-    <main class="container mt-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="mb-0">Bitácora del Sistema</h1>
-            <div>
-                <a href="/bitacoras/reporte" class="btn btn-outline-primary me-2">
-                    <i class="bi bi-file-earmark-pdf me-2"></i>Generar Reporte
-                </a>
+    <div class="row g-4">
+      <!-- Tarjeta de Bitácoras de Reparaciones -->
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0 hover-shadow">
+          <div class="card-body text-center p-4">
+            <div class="rounded-circle bg-warning bg-opacity-10 p-3 d-inline-flex mb-3">
+              <i class="bi bi-tools fs-1 text-warning"></i>
             </div>
+            <h5 class="card-title">Bitácoras de Reparaciones</h5>
+            <p class="card-text text-muted">Consulta el historial de todas las reparaciones realizadas en el sistema.</p>
+            <a href="/bitacoras/reparaciones" class="btn btn-outline-warning mt-2">
+              <i class="bi bi-arrow-right me-1"></i>Ver Bitácoras
+            </a>
+          </div>
         </div>
-        
-        <% if (mensajes.success) { %>
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <%= mensajes.success %>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+      </div>
+      
+      <!-- Tarjeta de Bitácoras de Técnicos -->
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0 hover-shadow">
+          <div class="card-body text-center p-4">
+            <div class="rounded-circle bg-info bg-opacity-10 p-3 d-inline-flex mb-3">
+              <i class="bi bi-person-gear fs-1 text-info"></i>
             </div>
-        <% } %>
-        
-        <% if (mensajes.error) { %>
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <%= mensajes.error %>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-            </div>
-        <% } %>
-        
-        <!-- Navegación de bitácoras -->
-        <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
-                <h5 class="card-title mb-0">Secciones de Bitácoras</h5>
-            </div>
-            <div class="card-body">
-                <div class="row row-cols-1 row-cols-md-4 g-4">
-                    <div class="col">
-                        <div class="card h-100 text-center">
-                            <div class="card-body">
-                                <i class="bi bi-journal-text fs-1 text-primary"></i>
-                                <h5 class="card-title mt-3">Bitácora General</h5>
-                                <p class="card-text">Registro completo de todas las actividades del sistema</p>
-                            </div>
-                            <div class="card-footer bg-transparent border-0">
-                                <a href="/bitacoras" class="btn btn-primary">Ver Bitácora</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="card h-100 text-center">
-                            <div class="card-body">
-                                <i class="bi bi-tools fs-1 text-success"></i>
-                                <h5 class="card-title mt-3">Reparaciones</h5>
-                                <p class="card-text">Historial de todas las reparaciones realizadas</p>
-                            </div>
-                            <div class="card-footer bg-transparent border-0">
-                                <a href="/bitacoras/reparaciones" class="btn btn-success">Ver Reparaciones</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="card h-100 text-center">
-                            <div class="card-body">
-                                <i class="bi bi-person-gear fs-1 text-info"></i>
-                                <h5 class="card-title mt-3">Técnicos</h5>
-                                <p class="card-text">Estadísticas y actividades de los técnicos</p>
-                            </div>
-                            <div class="card-footer bg-transparent border-0">
-                                <a href="/bitacoras/tecnicos" class="btn btn-info text-white">Ver Técnicos</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="card h-100 text-center">
-                            <div class="card-body">
-                                <i class="bi bi-pc-display fs-1 text-warning"></i>
-                                <h5 class="card-title mt-3">Equipos</h5>
-                                <p class="card-text">Historial de actividades por equipo</p>
-                            </div>
-                            <div class="card-footer bg-transparent border-0">
-                                <a href="/bitacoras/equipos" class="btn btn-warning">Ver Equipos</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <h5 class="card-title">Bitácoras de Técnicos</h5>
+            <p class="card-text text-muted">Consulta el historial de actividades de los técnicos del sistema.</p>
+            <a href="/bitacoras/tecnicos" class="btn btn-outline-info mt-2">
+              <i class="bi bi-arrow-right me-1"></i>Ver Bitácoras
+            </a>
+          </div>
         </div>
-        
-        <!-- Filtros -->
-        <div class="card mb-4">
-            <div class="card-header bg-secondary text-white">
-                <h5 class="card-title mb-0">Filtrar Registros</h5>
+      </div>
+      
+      <!-- Tarjeta de Bitácoras de Equipos -->
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0 hover-shadow">
+          <div class="card-body text-center p-4">
+            <div class="rounded-circle bg-primary bg-opacity-10 p-3 d-inline-flex mb-3">
+              <i class="bi bi-laptop fs-1 text-primary"></i>
             </div>
-            <div class="card-body">
-                <form action="/bitacoras" method="GET" class="row g-3">
-                    <div class="col-md-3">
-                        <label for="tipo" class="form-label">Tipo de Evento</label>
-                        <select name="tipo" id="tipo" class="form-select">
-                            <option value="">Todos</option>
-                            <option value="reparacion" <%= filtros.tipoEvento === 'reparacion' ? 'selected' : '' %>>Reparación</option>
-                            <option value="asignacion" <%= filtros.tipoEvento === 'asignacion' ? 'selected' : '' %>>Asignación</option>
-                            <option value="equipo" <%= filtros.tipoEvento === 'equipo' ? 'selected' : '' %>>Equipo</option>
-                            <option value="usuario" <%= filtros.tipoEvento === 'usuario' ? 'selected' : '' %>>Usuario</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="fechaInicio" class="form-label">Fecha Inicio</label>
-                        <input type="date" class="form-control" id="fechaInicio" name="fechaInicio" value="<%= filtros.fechaInicio %>">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="fechaFin" class="form-label">Fecha Fin</label>
-                        <input type="date" class="form-control" id="fechaFin" name="fechaFin" value="<%= filtros.fechaFin %>">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="usuario" class="form-label">Usuario</label>
-                        <select name="usuario" id="usuario" class="form-select">
-                            <option value="">Todos</option>
-                            <% usuarios.forEach(usuario => { %>
-                                <option value="<%= usuario.id_usuario %>" <%= filtros.usuarioId == usuario.id_usuario ? 'selected' : '' %>>
-                                    <%= usuario.nombre %>
-                                </option>
-                            <% }); %>
-                        </select>
-                    </div>
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-filter me-2"></i>Filtrar
-                        </button>
-                        <a href="/bitacoras" class="btn btn-outline-secondary">
-                            <i class="bi bi-x-circle me-2"></i>Limpiar Filtros
-                        </a>
-                    </div>
-                </form>
-            </div>
+            <h5 class="card-title">Bitácoras de Equipos</h5>
+            <p class="card-text text-muted">Consulta el historial de todos los equipos registrados en el sistema.</p>
+            <a href="/bitacoras/equipos" class="btn btn-outline-primary mt-2">
+              <i class="bi bi-arrow-right me-1"></i>Ver Bitácoras
+            </a>
+          </div>
         </div>
-        
-        <!-- Tabla de bitácoras -->
-        <div class="card">
-            <div class="card-header bg-light">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0">Registros de Actividad</h5>
-                    <span class="badge bg-primary">Total: <%= paginacion.totalRegistros %></span>
-                </div>
-            </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover table-striped mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th>ID</th>
-                                <th>Tipo</th>
-                                <th>Descripción</th>
-                                <th>Usuario</th>
-                                <th>Fecha</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% if (bitacoras && bitacoras.length > 0) { %>
-                                <% bitacoras.forEach(bitacora => { %>
-                                    <tr>
-                                        <td><%= bitacora.id_bitacora %></td>
-                                        <td>
-                                            <% if (bitacora.tipo_evento === 'reparacion') { %>
-                                                <span class="badge bg-success">Reparación</span>
-                                            <% } else if (bitacora.tipo_evento === 'asignacion') { %>
-                                                <span class="badge bg-info">Asignación</span>
-                                            <% } else if (bitacora.tipo_evento === 'equipo') { %>
-                                                <span class="badge bg-warning">Equipo</span>
-                                            <% } else if (bitacora.tipo_evento === 'usuario') { %>
-                                                <span class="badge bg-secondary">Usuario</span>
-                                            <% } %>
-                                        </td>
-                                        <td><%= bitacora.descripcion %></td>
-                                        <td><%= bitacora.nombre_usuario || 'Sistema' %></td>
-                                        <td><%= new Date(bitacora.fecha_registro).toLocaleString() %></td>
-                                        <td>
-                                            <% if (bitacora.tipo_evento === 'reparacion') { %>
-                                                <a href="/reparaciones/detalles/<%= bitacora.id_referencia %>" class="btn btn-sm btn-outline-primary">
-                                                    <i class="bi bi-eye"></i>
-                                                </a>
-                                            <% } else if (bitacora.tipo_evento === 'equipo') { %>
-                                                <a href="/equipos/editar/<%= bitacora.id_referencia %>" class="btn btn-sm btn-outline-primary">
-                                                    <i class="bi bi-eye"></i>
-                                                </a>
-                                            <% } %>
-                                        </td>
-                                    </tr>
-                                <% }); %>
-                            <% } else { %>
-                                <tr>
-                                    <td colspan="6" class="text-center py-4">
-                                        <i class="bi bi-info-circle me-2"></i>No hay registros que mostrar
-                                    </td>
-                                </tr>
-                            <% } %>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="card-footer">
-                <% if (paginacion.totalPaginas > 1) { %>
-                    <nav aria-label="Paginación de bitácoras">
-                        <ul class="pagination justify-content-center mb-0">
-                            <li class="page-item <%= paginacion.pagina === 1 ? 'disabled' : '' %>">
-                                <a class="page-link" href="/bitacoras?page=<%= paginacion.pagina - 1 %>&tipo=<%= filtros.tipoEvento %>&fechaInicio=<%= filtros.fechaInicio %>&fechaFin=<%= filtros.fechaFin %>&usuario=<%= filtros.usuarioId %>">Anterior</a>
-                            </li>
-                            
-                            <% for(let i = 1; i <= paginacion.totalPaginas; i++) { %>
-                                <% if (i === 1 || i === paginacion.totalPaginas || (i >= paginacion.pagina - 2 && i <= paginacion.pagina + 2)) { %>
-                                    <li class="page-item <%= paginacion.pagina === i ? 'active' : '' %>">
-                                        <a class="page-link" href="/bitacoras?page=<%= i %>&tipo=<%= filtros.tipoEvento %>&fechaInicio=<%= filtros.fechaInicio %>&fechaFin=<%= filtros.fechaFin %>&usuario=<%= filtros.usuarioId %>"><%= i %></a>
-                                    </li>
-                                <% } else if (i === paginacion.pagina - 3 || i === paginacion.pagina + 3) { %>
-                                    <li class="page-item disabled">
-                                        <span class="page-link">...</span>
-                                    </li>
-                                <% } %>
-                            <% } %>
-                            
-                            <li class="page-item <%= paginacion.pagina === paginacion.totalPaginas ? 'disabled' : '' %>">
-                                <a class="page-link" href="/bitacoras?page=<%= paginacion.pagina + 1 %>&tipo=<%= filtros.tipoEvento %>&fechaInicio=<%= filtros.fechaInicio %>&fechaFin=<%= filtros.fechaFin %>&usuario=<%= filtros.usuarioId %>">Siguiente</a>
-                            </li>
-                        </ul>
-                    </nav>
-                <% } %>
-            </div>
-        </div>
-    </main>
+      </div>
+    </div>
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Últimas Actividades -->
+    <div class="card shadow-sm mt-5">
+      <div class="card-header bg-white py-3">
+        <h5 class="mb-0">Últimas Actividades</h5>
+      </div>
+      <div class="card-body p-0">
+        <div class="list-group list-group-flush">
+          <% if (bitacoras && bitacoras.length > 0) { %>
+            <% bitacoras.forEach(function(bitacora) { %>
+              <div class="list-group-item py-3">
+                <div class="d-flex align-items-center">
+                  <% 
+                    let iconClass = '';
+                    if (bitacora.tipo === 'reparacion') {
+                      iconClass = 'bi-tools text-warning';
+                    } else if (bitacora.tipo === 'equipo') {
+                      iconClass = 'bi-laptop text-primary';
+                    } else if (bitacora.tipo === 'asignacion') {
+                      iconClass = 'bi-people text-info';
+                    } else {
+                      iconClass = 'bi-activity text-success';
+                    }
+                  %>
+                  <div class="rounded-circle bg-light p-2 me-3">
+                    <i class="bi <%= iconClass %> fs-5"></i>
+                  </div>
+                  <div>
+                    <h6 class="mb-1"><%= bitacora.descripcion %></h6>
+                    <div class="d-flex align-items-center text-muted small">
+                      <i class="bi bi-clock me-1"></i>
+                      <span><%= new Date(bitacora.fecha).toLocaleString() %></span>
+                      <span class="mx-2">•</span>
+                      <i class="bi bi-person me-1"></i>
+                      <span><%= bitacora.usuario || 'Sistema' %></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% }); %>
+          <% } else { %>
+            <div class="list-group-item py-4 text-center">
+              <i class="bi bi-journal-text fs-1 text-muted d-block mb-2"></i>
+              <p class="mb-0">No hay actividades registradas</p>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <!-- Bootstrap 5 JS Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <style>
+    .hover-shadow {
+      transition: all 0.3s ease;
+    }
+    
+    .hover-shadow:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+    }
+  </style>
 </body>
 </html>
 

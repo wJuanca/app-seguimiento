@@ -1,95 +1,182 @@
-&lt;!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestión de Usuarios</title>
+  <title>Gestión de Usuarios - Sistema de Gestión</title>
+  <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Custom CSS -->
   <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
   <%- include('../partials/header.ejs') %>
-  
-  <main class="container mt-5">
-      <div class="d-flex justify-content-between align-items-center mb-4">
-          <h1 class="mb-0">Gestión de Usuarios</h1>
-          <a href="/usuarios/crear" class="btn btn-success">
-              <i class="bi bi-plus-circle me-2"></i>Crear Usuario
-          </a>
+
+  <main class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="mb-0 fs-2">Gestión de Usuarios</h1>
+      <a href="/usuarios/crear" class="btn btn-success">
+        <i class="bi bi-person-plus-fill me-2"></i>Crear Usuario
+      </a>
+    </div>
+    
+    <% if (mensajes && mensajes.success) { %>
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        <%= mensajes.success %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
       </div>
-      
-      <div class="card">
-          <div class="card-body">
-              <div class="table-responsive">
-                  <table class="table table-striped table-hover">
-                      <thead class="table-primary">
-                          <tr>
-                              <th>ID</th>
-                              <th>Nombre</th>
-                              <th>Correo</th>
-                              <th class="d-none d-md-table-cell">Teléfono</th>
-                              <th class="d-none d-lg-table-cell">Contraseña</th>
-                              <th>Rol</th>
-                              <th class="d-none d-md-table-cell">Fecha Registro</th>
-                              <th>Acciones</th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          <% if (typeof usuarios !== 'undefined' && usuarios.length > 0) { %>
-                              <% usuarios.forEach((usuario) => { %>
-                                  <% 
-                                      var roleBadgeClass = '';
-                                      if (usuario.rol.toLowerCase() === 'admin') {
-                                          roleBadgeClass = 'role-admin';
-                                      } else if (usuario.rol.toLowerCase() === 'tecnico') {
-                                          roleBadgeClass = 'role-tecnico';
-                                      } else {
-                                          roleBadgeClass = 'role-usuario';
-                                      }
-                                  %>
-                                  <tr>
-                                      <td><%= usuario.id_usuario %></td>
-                                      <td><%= usuario.nombre %></td>
-                                      <td><%= usuario.correo %></td>
-                                      <td class="d-none d-md-table-cell"><%= usuario.telefono %></td>
-                                      <td class="d-none d-lg-table-cell"><%= usuario.contrasena %></td>
-                                      <td>
-                                          <span class="badge <%= roleBadgeClass %>">
-                                              <%= usuario.rol %>
-                                          </span>
-                                      </td>
-                                      <td class="d-none d-md-table-cell">
-                                          <%= usuario.fecha_registro.toISOString().split('T')[0] %>
-                                      </td>
-                                      <td>
-                                          <div class="d-flex gap-2">
-                                              <a href="/usuarios/ver/<%= usuario.id_usuario %>" class="btn btn-sm btn-outline-primary" title="Ver">
-                                                  <i class="bi bi-eye"></i>
-                                              </a>
-                                              <a href="/usuarios/editar/<%= usuario.id_usuario %>" class="btn btn-sm btn-outline-warning" title="Editar">
-                                                  <i class="bi bi-pencil"></i>
-                                              </a>
-                                              <a href="/usuarios/eliminar/<%= usuario.id_usuario %>" class="btn btn-sm btn-outline-danger" title="Eliminar">
-                                                  <i class="bi bi-trash"></i>
-                                              </a>
-                                          </div>
-                                      </td>
-                                  </tr>
-                              <% }) %>
-                          <% } else { %>
-                              <tr>
-                                  <td colspan="8" class="text-center">No hay usuarios registrados</td>
-                              </tr>
-                          <% } %>
-                      </tbody>
-                  </table>
-              </div>
+    <% } %>
+    
+    <% if (mensajes && mensajes.error) { %>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <%= mensajes.error %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+      </div>
+    <% } %>
+    
+    <div class="card shadow-sm">
+      <div class="card-header bg-white py-3">
+        <div class="row align-items-center">
+          <div class="col">
+            <h5 class="mb-0">Lista de Usuarios</h5>
           </div>
+          <div class="col-auto">
+            <div class="input-group">
+              <span class="input-group-text bg-light">
+                <i class="bi bi-search"></i>
+              </span>
+              <input type="text" id="searchInput" class="form-control" placeholder="Buscar usuario...">
+            </div>
+          </div>
+        </div>
       </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0" id="usuariosTable">
+            <thead class="table-light">
+              <tr>
+                <th class="ps-3">ID</th>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th class="d-none d-md-table-cell">Teléfono</th>
+                <th class="d-none d-lg-table-cell">Contraseña</th>
+                <th>Rol</th>
+                <th class="d-none d-md-table-cell">Fecha Registro</th>
+                <th class="text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (typeof usuarios !== 'undefined' && usuarios.length > 0) { %>
+                <% usuarios.forEach((usuario) => { %>
+                  <tr>
+                    <td class="ps-3"><%= usuario.id_usuario %></td>
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <div class="avatar-circle bg-primary text-white me-2">
+                          <%= usuario.nombre.charAt(0).toUpperCase() %>
+                        </div>
+                        <%= usuario.nombre %>
+                      </div>
+                    </td>
+                    <td><%= usuario.correo %></td>
+                    <td class="d-none d-md-table-cell"><%= usuario.telefono %></td>
+                    <td class="d-none d-lg-table-cell"><%= usuario.contrasena %></td>
+                    <td>
+                      <% 
+                        let badgeClass = '';
+                        let badgeIcon = '';
+                        
+                        if (usuario.rol.toLowerCase() === 'admin') {
+                          badgeClass = 'bg-purple text-white';
+                          badgeIcon = 'shield-lock';
+                        } else if (usuario.rol.toLowerCase() === 'tecnico') {
+                          badgeClass = 'bg-info text-white';
+                          badgeIcon = 'tools';
+                        } else {
+                          badgeClass = 'bg-success text-white';
+                          badgeIcon = 'person';
+                        }
+                      %>
+                      <span class="badge <%= badgeClass %>">
+                        <i class="bi bi-<%= badgeIcon %> me-1"></i>
+                        <%= usuario.rol %>
+                      </span>
+                    </td>
+                    <td class="d-none d-md-table-cell">
+                      <%= usuario.fecha_registro.toISOString().split('T')[0] %>
+                    </td>
+                    <td>
+                      <div class="d-flex justify-content-center gap-2">
+                        <a href="/usuarios/ver/<%= usuario.id_usuario %>" class="btn btn-sm btn-outline-primary" title="Ver">
+                          <i class="bi bi-eye"></i>
+                        </a>
+                        <a href="/usuarios/editar/<%= usuario.id_usuario %>" class="btn btn-sm btn-outline-warning" title="Editar">
+                          <i class="bi bi-pencil"></i>
+                        </a>
+                        <a href="/usuarios/eliminar/<%= usuario.id_usuario %>" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                          <i class="bi bi-trash"></i>
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } else { %>
+                <tr>
+                  <td colspan="8" class="text-center py-4">
+                    <i class="bi bi-people fs-1 text-muted d-block mb-2"></i>
+                    No hay usuarios registrados
+                  </td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </main>
-  
+
+  <!-- Bootstrap 5 JS Bundle with Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <style>
+    .avatar-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 500;
+    }
+    
+    .bg-purple {
+      background-color: #6f42c1;
+    }
+  </style>
+  
+  <script>
+    // Búsqueda en la tabla
+    document.addEventListener('DOMContentLoaded', function() {
+      const searchInput = document.getElementById('searchInput');
+      const table = document.getElementById('usuariosTable');
+      
+      if (searchInput && table) {
+        searchInput.addEventListener('keyup', function() {
+          const searchText = this.value.toLowerCase();
+          const rows = table.querySelectorAll('tbody tr');
+          
+          rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(searchText) ? '' : 'none';
+          });
+        });
+      }
+    });
+  </script>
 </body>
 </html>
 

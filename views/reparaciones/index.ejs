@@ -1,168 +1,175 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Reparaciones</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/main.css">
-    <style>
-        .estado-badge {
-            padding: 0.35rem 0.65rem;
-            border-radius: 50rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: capitalize;
-        }
-        .estado-pendiente {
-            background-color: #fff3cd;
-            color: #856404;
-        }
-        .estado-en_proceso {
-            background-color: #cce5ff;
-            color: #004085;
-        }
-        .estado-reparado {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        .estado-descartado {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-        .card-reparacion {
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .card-reparacion:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Reparaciones - Sistema de Gestión</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-    <%- include('../partials/header.ejs') %>
+  <%- include('../partials/header.ejs') %>
+  
+  <main class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="mb-0 fs-2">Gestión de Reparaciones</h1>
+      <a href="/reparaciones/crear" class="btn btn-success">
+        <i class="bi bi-plus-circle me-2"></i>Nueva Reparación
+      </a>
+    </div>
     
-    <main class="container mt-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="mb-0">Gestión de Reparaciones</h1>
-            <a href="/reparaciones/crear" class="btn btn-success">
-                <i class="bi bi-plus-circle me-2"></i>Nueva Reparación
-            </a>
-        </div>
-        
-        <% if (mensajes.success) { %>
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <%= mensajes.success %>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-            </div>
-        <% } %>
-        
-        <% if (mensajes.error) { %>
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <%= mensajes.error %>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-            </div>
-        <% } %>
-        
-        <!-- Filtros -->
-        <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
-                <h5 class="card-title mb-0">Filtrar por Estado</h5>
-            </div>
-            <div class="card-body">
-                <div class="d-flex flex-wrap gap-2">
-                    <a href="/reparaciones" class="btn btn-outline-secondary">
-                        Todos
-                    </a>
-                    <a href="/reparaciones/estado?estado=pendiente" class="btn btn-outline-warning">
-                        <i class="bi bi-hourglass me-2"></i>Pendientes
-                    </a>
-                    <a href="/reparaciones/estado?estado=en_proceso" class="btn btn-outline-primary">
-                        <i class="bi bi-tools me-2"></i>En Proceso
-                    </a>
-                    <a href="/reparaciones/estado?estado=reparado" class="btn btn-outline-success">
-                        <i class="bi bi-check-circle me-2"></i>Reparados
-                    </a>
-                    <a href="/reparaciones/estado?estado=descartado" class="btn btn-outline-danger">
-                        <i class="bi bi-x-circle me-2"></i>Descartados
-                    </a>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Lista de reparaciones -->
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-4">
-            <% if (reparaciones && reparaciones.length > 0) { %>
-                <% reparaciones.forEach(reparacion => { %>
-                    <div class="col">
-                        <div class="card h-100 card-reparacion">
-                            <div class="card-header d-flex justify-content-between align-items-center">
-                                <span class="estado-badge estado-<%= reparacion.estado %>">
-                                    <%= reparacion.estado.replace('_', ' ') %>
-                                </span>
-                                <small class="text-muted">
-                                    ID: <%= reparacion.id_reparacion %>
-                                </small>
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <i class="bi bi-pc-display me-2"></i>
-                                    <%= reparacion.nombre_equipo || 'Equipo #' + reparacion.equipo_id %>
-                                </h5>
-                                <p class="card-text text-truncate">
-                                    <small class="text-muted">Problema:</small><br>
-                                    <%= reparacion.descripcion_problema %>
-                                </p>
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <small class="text-muted">
-                                        <i class="bi bi-person"></i>
-                                        <%= reparacion.nombre_solicitante || 'Sin solicitante' %>
-                                    </small>
-                                    <small class="text-muted">
-                                        <i class="bi bi-calendar"></i>
-                                        <%= new Date(reparacion.fecha_inicio).toLocaleDateString() %>
-                                    </small>
-                                </div>
-                                
-                                <% if (reparacion.estado === 'pendiente') { %>
-                                    <div class="alert alert-warning py-2 mb-3">
-                                        <small>
-                                            <i class="bi bi-exclamation-triangle me-1"></i>
-                                            Esperando asignación de técnico
-                                        </small>
-                                    </div>
-                                <% } else if (reparacion.estado === 'en_proceso') { %>
-                                    <div class="alert alert-info py-2 mb-3">
-                                        <small>
-                                            <i class="bi bi-person-gear me-1"></i>
-                                            Técnico: <%= reparacion.nombre_tecnico || 'No asignado' %>
-                                        </small>
-                                    </div>
-                                <% } %>
-                            </div>
-                            <div class="card-footer bg-transparent">
-                                <div class="d-grid">
-                                    <a href="/reparaciones/detalles/<%= reparacion.id_reparacion %>" class="btn btn-primary">
-                                        <i class="bi bi-eye me-2"></i>Ver Detalles
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <% }) %>
-            <% } else { %>
-                <div class="col-12">
-                    <div class="alert alert-info text-center">
-                        <i class="bi bi-info-circle me-2"></i>
-                        No hay reparaciones que mostrar
-                    </div>
-                </div>
-            <% } %>
-        </div>
-    </main>
+    <% if (mensajes && mensajes.success) { %>
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        <%= mensajes.success %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+      </div>
+    <% } %>
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <% if (mensajes && mensajes.error) { %>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <%= mensajes.error %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+      </div>
+    <% } %>
+    
+    <!-- Filtros -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-primary text-white">
+        <h5 class="card-title mb-0">Filtrar por Estado</h5>
+      </div>
+      <div class="card-body">
+        <div class="d-flex flex-wrap gap-2">
+          <a href="/reparaciones" class="btn btn-outline-secondary">
+            <i class="bi bi-funnel me-1"></i>Todos
+          </a>
+          <a href="/reparaciones/estado?estado=pendiente" class="btn btn-outline-warning">
+            <i class="bi bi-hourglass me-2"></i>Pendientes
+          </a>
+          <a href="/reparaciones/estado?estado=en_proceso" class="btn btn-outline-primary">
+            <i class="bi bi-tools me-2"></i>En Proceso
+          </a>
+          <a href="/reparaciones/estado?estado=reparado" class="btn btn-outline-success">
+            <i class="bi bi-check-circle me-2"></i>Reparados
+          </a>
+          <a href="/reparaciones/estado?estado=descartado" class="btn btn-outline-danger">
+            <i class="bi bi-x-circle me-2"></i>Descartados
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Lista de reparaciones -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      <% if (reparaciones && reparaciones.length > 0) { %>
+        <% reparaciones.forEach(reparacion => { %>
+          <div class="col">
+            <div class="card h-100 shadow-sm border-0 hover-shadow">
+              <div class="card-header d-flex justify-content-between align-items-center py-3">
+                <% 
+                  let badgeClass = '';
+                  let badgeIcon = '';
+                  
+                  if (reparacion.estado === 'pendiente') {
+                    badgeClass = 'bg-warning text-dark';
+                    badgeIcon = 'hourglass-split';
+                  } else if (reparacion.estado === 'en_proceso') {
+                    badgeClass = 'bg-primary';
+                    badgeIcon = 'tools';
+                  } else if (reparacion.estado === 'reparado') {
+                    badgeClass = 'bg-success';
+                    badgeIcon = 'check-circle';
+                  } else {
+                    badgeClass = 'bg-danger';
+                    badgeIcon = 'x-circle';
+                  }
+                %>
+                <span class="badge <%= badgeClass %>">
+                  <i class="bi bi-<%= badgeIcon %> me-1"></i>
+                  <%= reparacion.estado.replace('_', ' ') %>
+                </span>
+                <small class="text-muted">
+                  ID: <%= reparacion.id_reparacion %>
+                </small>
+              </div>
+              <div class="card-body">
+                <h5 class="card-title d-flex align-items-center">
+                  <i class="bi bi-pc-display me-2 text-primary"></i>
+                  <%= reparacion.nombre_equipo || 'Equipo #' + reparacion.equipo_id %>
+                </h5>
+                <div class="card-text mb-3">
+                  <p class="text-truncate mb-1">
+                    <small class="text-muted">Problema:</small>
+                  </p>
+                  <p class="mb-0 text-truncate">
+                    <%= reparacion.descripcion_problema %>
+                  </p>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <small class="text-muted d-flex align-items-center">
+                    <i class="bi bi-person me-1"></i>
+                    <%= reparacion.nombre_solicitante || 'Sin solicitante' %>
+                  </small>
+                  <small class="text-muted d-flex align-items-center">
+                    <i class="bi bi-calendar me-1"></i>
+                    <%= new Date(reparacion.fecha_inicio).toLocaleDateString() %>
+                  </small>
+                </div>
+                
+                <% if (reparacion.estado === 'pendiente') { %>
+                  <div class="alert alert-warning py-2 mb-3">
+                    <small class="d-flex align-items-center">
+                      <i class="bi bi-exclamation-triangle me-1"></i>
+                      Esperando asignación de técnico
+                    </small>
+                  </div>
+                <% } else if (reparacion.estado === 'en_proceso') { %>
+                  <div class="alert alert-info py-2 mb-3">
+                    <small class="d-flex align-items-center">
+                      <i class="bi bi-person-gear me-1"></i>
+                      Técnico: <%= reparacion.nombre_tecnico || 'No asignado' %>
+                    </small>
+                  </div>
+                <% } %>
+              </div>
+              <div class="card-footer bg-white border-top-0">
+                <a href="/reparaciones/detalles/<%= reparacion.id_reparacion %>" class="btn btn-primary w-100">
+                  <i class="bi bi-eye me-2"></i>Ver Detalles
+                </a>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <div class="col-12">
+          <div class="alert alert-info text-center py-5">
+            <i class="bi bi-info-circle fs-1 d-block mb-3"></i>
+            <h5>No hay reparaciones que mostrar</h5>
+            <p class="mb-0">Crea una nueva reparación para comenzar.</p>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </main>
+  
+  <!-- Bootstrap 5 JS Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <style>
+    .hover-shadow {
+      transition: all 0.3s ease;
+    }
+    
+    .hover-shadow:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+    }
+  </style>
 </body>
 </html>
 
