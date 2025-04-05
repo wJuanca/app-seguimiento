@@ -34,15 +34,6 @@ router.get("/reporte_mantenimiento", (req, res) => {
   }
 })
 
-// ruta para solicitudes
-router.get("/reporte_solicitudes", (req, res) => {
-  if (typeof reporteController.mostrarReporteSolicitudes === "function") {
-    reporteController.mostrarReporteSolicitudes(req, res)
-  } else {
-    res.render("reports/reporte_solicitudes", { title: "Solicitudes" })
-  }
-})
-
 // ruta para usuarios
 router.get("/reporte_usuarios", (req, res) => {
   res.render("reports/reporte_usuarios", { title: "Usuarios" })
