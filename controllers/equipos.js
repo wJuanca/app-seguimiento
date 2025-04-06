@@ -122,6 +122,50 @@ exports.formEditarEquipo = (req, res) => {
   })
 }
 
+// ver detalles de un equipo (vista de solo lectura)
+exports.verEquipo = (req, res) => {
+  const query = `
+        SELECT e.*, u.nombre AS usuario_actual 
+        FROM equipos e 
+        LEFT JOIN usuarios u ON e.usuario_actual_id = u.id_usuario 
+        WHERE e.id_equipo = ?
+    `
+
+  db.query(query, [req.params.id], (err, resultado) => {
+    if (err) {
+      console.error("Error al obtener equipo:", err)
+      res.status(500).send("Error al obtener equipo")
+      return
+    }
+
+    if (resultado.length === 0) {
+      res.status(404).render("404")
+      return
+    }
+
+    // Obtener historial de reparaciones
+    const reparacionesQuery = `
+      SELECT r.*, t.nombre AS nombre_tecnico
+      FROM reparaciones r
+      LEFT JOIN usuarios t ON r.tecnico_id = t.id_usuario
+      WHERE r.equipo_id = ?
+      ORDER BY r.fecha_inicio DESC
+    `
+
+    db.query(reparacionesQuery, [req.params.id], (err, reparaciones) => {
+      if (err) {
+        console.error("Error al obtener historial de reparaciones:", err)
+        return res.render("equipos/ver", { equipo: resultado[0], reparaciones: [] })
+      }
+
+      res.render("equipos/ver", {
+        equipo: resultado[0],
+        reparaciones: reparaciones,
+      })
+    })
+  })
+}
+
 // Guardar los cambios del equipo en la base de datos
 exports.editarEquipo = (req, res) => {
   const { nombre, tipo, marca, modelo, numero_serie, estado } = req.body

@@ -84,7 +84,7 @@
                     </td>
                     <td><%= usuario.correo %></td>
                     <td class="d-none d-md-table-cell"><%= usuario.telefono %></td>
-                    <td class="d-none d-lg-table-cell"><%= usuario.contrasena %></td>
+                    <td class="d-none d-lg-table-cell">********</td>
                     <td>
                       <% 
                         let badgeClass = '';
@@ -114,12 +114,11 @@
                         <a href="/usuarios/ver/<%= usuario.id_usuario %>" class="btn btn-sm btn-outline-primary" title="Ver">
                           <i class="bi bi-eye"></i>
                         </a>
+                        <% if (usuario && usuario.rol === 'admin') { %>
                         <a href="/usuarios/editar/<%= usuario.id_usuario %>" class="btn btn-sm btn-outline-warning" title="Editar">
                           <i class="bi bi-pencil"></i>
                         </a>
-                        <a href="/usuarios/eliminar/<%= usuario.id_usuario %>" class="btn btn-sm btn-outline-danger" title="Eliminar">
-                          <i class="bi bi-trash"></i>
-                        </a>
+                        <% } %>
                       </div>
                     </td>
                   </tr>

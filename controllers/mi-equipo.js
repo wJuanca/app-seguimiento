@@ -67,13 +67,36 @@ exports.verDetallesEquipo = (req, res) => {
           return res.redirect("/mi-equipo")
         }
 
-        // Obtenemos la repacion activa si este tiene una 
+        // Obtenemos la repacion activa si este tiene una
         const reparacionActiva = reparaciones.find((r) => r.estado === "pendiente" || r.estado === "en_proceso")
 
-        res.render("mi-equipo/detalles", {
-          equipo,
-          reparaciones,
-          reparacionActiva,
+        // Obtener historial de asignaciones
+        const queryAsignaciones = `
+          SELECT a.*, u.nombre AS nombre_usuario
+          FROM asignaciones a
+          LEFT JOIN usuarios u ON a.usuario_id = u.id_usuario
+          WHERE a.equipo_id = ?
+          ORDER BY a.fecha_asignacion DESC
+        `
+
+        conexion.query(queryAsignaciones, [idEquipo], (error, historialAsignaciones) => {
+          if (error) {
+            console.error("Error al obtener historial de asignaciones:", error)
+            // Continue rendering even if there's an error with asignaciones
+            return res.render("mi-equipo/detalles", {
+              equipo,
+              reparaciones,
+              reparacionActiva,
+              historialAsignaciones: [], // Empty array as fallback
+            })
+          }
+
+          res.render("mi-equipo/detalles", {
+            equipo,
+            reparaciones,
+            reparacionActiva,
+            historialAsignaciones,
+          })
         })
       })
     },
@@ -100,7 +123,6 @@ exports.devolverEquipo = (req, res) => {
         req.flash("error", "No tienes acceso a este equipo")
         return res.redirect("/mi-equipo")
       }
-
 
       // Verificamos que el equipo este en reparacion para poder devolver
       if (resultados[0].estado === "en_reparacion") {
@@ -146,7 +168,7 @@ exports.reportarParaReparacion = (req, res) => {
   const idUsuario = req.session.usuario.id
   const { descripcion_problema } = req.body
 
-  // Verifiamos que el equipo pertenezca al usuario 
+  // Verifiamos que el equipo pertenezca al usuario
   conexion.query(
     "SELECT * FROM equipos WHERE id_equipo = ? AND usuario_actual_id = ?",
     [idEquipo, idUsuario],
@@ -186,7 +208,7 @@ exports.reportarParaReparacion = (req, res) => {
             })
           }
 
-          // funcion para asignar el estado de pendiente cuando cuando aun no esta reparado 
+          // funcion para asignar el estado de pendiente cuando cuando aun no esta reparado
           conexion.query(
             "INSERT INTO reparaciones (equipo_id, usuario_solicitante_id, descripcion_problema, estado, fecha_inicio) VALUES (?, ?, ?, 'pendiente', NOW())",
             [idEquipo, idUsuario, descripcion_problema],
@@ -221,5 +243,72 @@ exports.reportarParaReparacion = (req, res) => {
       })
     },
   )
+}
+
+// Add this method to show equipment history for the user
+exports.mostrarHistorial = (req, res) => {
+  const idUsuario = req.session.usuario.id
+
+  // Query to get all equipment ever assigned to this user, including past assignments
+  const query = `
+    SELECT DISTINCT e.*, a.fecha_asignacion, a.fecha_devolucion, a.razon_asignacion, a.estado AS estado_asignacion
+    FROM equipos e
+    JOIN asignaciones a ON e.id_equipo = a.equipo_id
+    WHERE a.usuario_id = ?
+    ORDER BY a.fecha_asignacion DESC
+  `
+
+  // Execute the query
+  conexion.query(query, [idUsuario], (error, equipos) => {
+    if (error) {
+      console.error("Error al obtener historial de equipos:", error)
+      req.flash("error", "Error al cargar el historial de equipos")
+      return res.redirect("/mi-equipo")
+    }
+
+    // Get repair history for each equipment
+    const equiposConReparaciones = []
+    let equiposProcesados = 0
+
+    if (equipos.length === 0) {
+      return res.render("mi-equipo/historial", {
+        equipos: [],
+        mensajes: req.flash(),
+      })
+    }
+
+    equipos.forEach((equipo) => {
+      const reparacionesQuery = `
+        SELECT r.*, t.nombre AS nombre_tecnico
+        FROM reparaciones r
+        LEFT JOIN usuarios t ON r.tecnico_id = t.id_usuario
+        WHERE r.equipo_id = ? AND r.estado IN ('reparado', 'descartado')
+        ORDER BY r.fecha_finalizacion DESC
+      `
+
+      conexion.query(reparacionesQuery, [equipo.id_equipo], (error, reparaciones) => {
+        equiposProcesados++
+
+        if (!error) {
+          equipo.reparaciones = reparaciones
+        } else {
+          console.error(`Error al obtener reparaciones para equipo ${equipo.id_equipo}:`, error)
+          equipo.reparaciones = []
+        }
+
+        equiposConReparaciones.push(equipo)
+
+        if (equiposProcesados === equipos.length) {
+          // Sort by assignment date (newest first)
+          equiposConReparaciones.sort((a, b) => new Date(b.fecha_asignacion) - new Date(a.fecha_asignacion))
+
+          res.render("mi-equipo/historial", {
+            equipos: equiposConReparaciones,
+            mensajes: req.flash(),
+          })
+        }
+      })
+    })
+  })
 }
 

@@ -17,9 +17,11 @@
   <main class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h1 class="mb-0 fs-2">Inventario de Equipos</h1>
+    <% if (usuario && usuario.rol === 'admin') { %>
       <a href="/equipos/crear" class="btn btn-success">
         <i class="bi bi-plus-circle me-2"></i>Nuevo Equipo
       </a>
+    <% } %>
     </div>
     
     <!-- Filtros Card -->
@@ -118,21 +120,19 @@
                       </span>
                     </td>
                     <td class="d-none d-lg-table-cell"><%= equipo.usuario_actual || 'No asignado' %></td>
-                    <td>
-                      <div class="btn-group btn-group-sm">
+                  <td>
+                    <div class="btn-group btn-group-sm">
+                      <% if (usuario && usuario.rol === 'admin') { %>
                         <a href="/equipos/editar/<%= equipo.id_equipo %>" class="btn btn-outline-primary" title="Editar">
                           <i class="bi bi-pencil"></i>
                         </a>
-                        <button 
-                          data-delete-equipo="<%= equipo.id_equipo %>" 
-                          data-equipo-nombre="<%= equipo.nombre %>" 
-                          class="btn btn-outline-danger btn-delete" 
-                          title="Eliminar"
-                        >
-                          <i class="bi bi-trash"></i>
-                        </button>
-                      </div>
-                    </td>
+                      <% } else { %>
+                        <a href="/equipos/ver/<%= equipo.id_equipo %>" class="btn btn-outline-info" title="Ver detalles">
+                          <i class="bi bi-eye"></i>
+                        </a>
+                      <% } %>
+                    </div>
+                  </td>
                   </tr>
                 <% }) %>
               <% } else { %>
@@ -150,63 +150,9 @@
     </div>
   </main>
 
-  <!-- Modal de Confirmación de Eliminación -->
-  <div class="modal fade" id="confirmarEliminarModal" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Confirmar Eliminación</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <p>¿Está seguro que desea eliminar el equipo <strong id="nombreEquipoEliminar"></strong>?</p>
-          <p class="text-muted small">Esta acción no se puede deshacer.</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-danger" id="confirmarEliminarBtn">
-            <i class="bi bi-trash me-1"></i>Eliminar
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Bootstrap JS and Popper.js (Required for modal functionality) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Get modal elements
-      const deleteModal = new bootstrap.Modal(document.getElementById('confirmarEliminarModal'));
-      const nombreEquipoEliminar = document.getElementById('nombreEquipoEliminar');
-      const confirmarEliminarBtn = document.getElementById('confirmarEliminarBtn');
-      let equipoIdToDelete = null;
-
-      // Add click event to all delete buttons
-      document.querySelectorAll('.btn-delete').forEach(button => {
-        button.addEventListener('click', function() {
-          // Get equipment ID and name from data attributes
-          equipoIdToDelete = this.getAttribute('data-delete-equipo');
-          const equipoNombre = this.getAttribute('data-equipo-nombre');
-
-          // Set equipment name in modal
-          nombreEquipoEliminar.textContent = equipoNombre;
-
-          // Show modal
-          deleteModal.show();
-        });
-      });
-
-      // Add click event to confirm delete button
-      confirmarEliminarBtn.addEventListener('click', function() {
-        if (equipoIdToDelete) {
-          // Redirect to delete route or use fetch to delete
-          window.location.href = `/equipos/eliminar/${equipoIdToDelete}`;
-        }
-      });
-    });
-  </script>
 </body>
 </html>
 

@@ -5,8 +5,8 @@ const bitacorasController = require("./bitacorasController")
 
 //Mostramos todas las repaciones disponibles
 exports.mostrarReparaciones = (req, res) => {
-  // Con esta consulta obtenemos todas las repaciones con informacion de equipos, usuarios y tecnicos
-  const query = `
+  // Base query
+  let query = `
       SELECT r.*, 
              e.nombre AS nombre_equipo, e.marca, e.modelo, e.tipo,
              us.nombre AS nombre_solicitante, 
@@ -15,7 +15,17 @@ exports.mostrarReparaciones = (req, res) => {
       LEFT JOIN equipos e ON r.equipo_id = e.id_equipo
       LEFT JOIN usuarios us ON r.usuario_solicitante_id = us.id_usuario
       LEFT JOIN usuarios t ON r.tecnico_id = t.id_usuario
-      ORDER BY 
+  `
+
+  // Filter by technician if user is a technician
+  const params = []
+  if (req.session.usuario && req.session.usuario.rol === "tecnico") {
+    query += ` WHERE (r.tecnico_id = ? OR r.tecnico_id IS NULL OR r.estado = 'pendiente')`
+    params.push(req.session.usuario.id)
+  }
+
+  // Add ordering
+  query += ` ORDER BY 
           CASE 
               WHEN r.estado = 'pendiente' THEN 1
               WHEN r.estado = 'en_proceso' THEN 2
@@ -25,7 +35,7 @@ exports.mostrarReparaciones = (req, res) => {
           r.fecha_inicio DESC
   `
 
-  conexion.query(query, (error, reparaciones) => {
+  conexion.query(query, params, (error, reparaciones) => {
     if (error) {
       console.error("Error al obtener reparaciones:", error)
       req.flash("error", "Error al cargar las reparaciones")
@@ -837,7 +847,8 @@ exports.getReparacionesPorEstado = (req, res) => {
     return res.render("reparaciones/index", { reparaciones: [], tecnicos: [] })
   }
 
-  const query = `
+  // Base query
+  let query = `
       SELECT r.*, 
              e.nombre AS nombre_equipo, e.marca, e.modelo, e.tipo,
              us.nombre AS nombre_solicitante, 
@@ -847,10 +858,21 @@ exports.getReparacionesPorEstado = (req, res) => {
       LEFT JOIN usuarios us ON r.usuario_solicitante_id = us.id_usuario
       LEFT JOIN usuarios t ON r.tecnico_id = t.id_usuario
       WHERE r.estado = ?
-      ORDER BY r.fecha_inicio DESC
   `
 
-  conexion.query(query, [estado], (error, reparaciones) => {
+  // Parameters array
+  const params = [estado]
+
+  // Filter by technician if user is a technician
+  if (req.session.usuario && req.session.usuario.rol === "tecnico") {
+    query += ` AND (r.tecnico_id = ? OR r.tecnico_id IS NULL OR r.estado = 'pendiente')`
+    params.push(req.session.usuario.id)
+  }
+
+  // Add ordering
+  query += ` ORDER BY r.fecha_inicio DESC`
+
+  conexion.query(query, params, (error, reparaciones) => {
     if (error) {
       console.error("Error al obtener reparaciones:", error)
       req.flash("error", "Error al cargar las reparaciones")
