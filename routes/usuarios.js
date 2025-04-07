@@ -4,7 +4,6 @@ const conexion = require("../database/db")
 const usuariosController = require("../controllers/usuarios")
 const auth = require("../middlewares/auth")
 
-// RUTAS PARA usuarios
 
 // Ruta principal - lista de usuarios
 router.get("/", (req, res) => {

@@ -1,5 +1,6 @@
 const conexion = require("../database/db")
 
+
 exports.save = (req, res) => {
   const nombre = req.body.nombre
   const correo = req.body.correo
@@ -8,6 +9,8 @@ exports.save = (req, res) => {
   const rol = req.body.rol
   const fecha_registro = req.body.fecha_registro
 
+
+  // Validar que los campos no estén vacíos
   conexion.query(
     "INSERT INTO usuarios SET ?",
     {
@@ -28,6 +31,7 @@ exports.save = (req, res) => {
   )
 }
 
+// Controlador para mostrar la lista de usuarios
 exports.edit = (req, res) => {
   const id_usuario = req.body.id_usuario
   const nombre = req.body.nombre

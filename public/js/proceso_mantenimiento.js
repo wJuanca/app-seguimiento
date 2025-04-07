@@ -17,7 +17,7 @@ async function mostrarProceso(equipoId) {
             return;
         }
 
-        // Add equipment info
+        // agregar información del equipo al inicio de la línea de tiempo
         const equipoInfo = document.createElement('div');
         equipoInfo.className = 'mb-4';
         equipoInfo.innerHTML = `
@@ -26,7 +26,7 @@ async function mostrarProceso(equipoId) {
         `;
         timeline.appendChild(equipoInfo);
 
-        // Add process timeline
+        // agregar cada etapa del proceso a la línea de tiempo
         data.forEach(proceso => {
             const etapaElement = document.createElement('div');
             etapaElement.className = `timeline-item ${proceso.estado}`;

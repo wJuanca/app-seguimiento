@@ -1,10 +1,10 @@
 :root {
     /* Paleta de colores */
-    --background: #f5f5f5; /* Blanco humo */
-    --text: #333333; /* Negro suave */
-    --primary: #007aff; /* Azul iOS */
-    --success: #34c759; /* Verde manzana */
-    --neutral: #a6a6a6; /* Gris neutral */
+    --background: #f5f5f5;
+    --text: #333333;
+    --primary: #007aff;
+    --success: #34c759;
+    --neutral: #a6a6a6;
   
     /* Colores derivados */
     --primary-hover: #0066cc;

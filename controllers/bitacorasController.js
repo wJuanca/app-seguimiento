@@ -570,7 +570,6 @@ exports.generarReportePDF = (req, res) => {
     }
 
     // Aquí normalmente generaríamos el PDF
-    // Como es un ejemplo, simplemente mostraremos los datos en formato JSON
     res.render("bitacoras/reporte", {
       titulo,
       tipo,

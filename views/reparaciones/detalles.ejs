@@ -118,7 +118,7 @@
       <% } %>
       
       <div class="row">
-          <!-- Información del equipo y estado -->
+          <!-- Informacion del equipo y estado -->
           <div class="col-lg-8">
               <div class="card mb-4">
                   <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
@@ -246,7 +246,7 @@
                                       <p class="text-warning mb-0">Pendiente de asignación</p>
                                       
                                       <% if (usuario && usuario.rol === 'admin') { %>
-                                          <!-- Formulario para administradores: asignar técnico -->
+                                          <!-- Formulario para administradores asignar tecnico -->
                                           <form action="/reparaciones/asignar-tecnico/<%= reparacion.id_reparacion %>" method="POST" class="mt-2">
                                               <div class="input-group">
                                                   <select name="tecnico_id" class="form-select form-select-sm">
@@ -261,7 +261,7 @@
                                               </div>
                                           </form>
                                       <% } else if (usuario && usuario.rol === 'tecnico') { %>
-                                          <!-- Botón para técnicos: tomar el caso -->
+                                          <!-- tomar el caso -->
                                           <form action="/reparaciones/tomar-caso/<%= reparacion.id_reparacion %>" method="POST" class="mt-2">
                                               <button type="submit" class="btn btn-primary btn-sm w-100">Tomar este caso</button>
                                           </form>
@@ -314,7 +314,7 @@
       </div>
   </main>
   
-  <!-- Modal para Completar Reparación -->
+  <!-- Modal para Completar Reparacion -->
   <div class="modal fade" id="completarModal" tabindex="-1">
       <div class="modal-dialog">
           <div class="modal-content">

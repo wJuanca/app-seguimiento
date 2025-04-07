@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const ctx = document.getElementById('tendenciasChart').getContext('2d');
     
-    // Format dates for labels
+    // Dar formato a las fechas de las etiquetas
     const labels = reparacionesPorMes.map(item => {
         const [year, month] = item.mes.split('-');
         return new Date(year, month - 1).toLocaleDateString('es-ES', { month: 'short', year: 'numeric' });

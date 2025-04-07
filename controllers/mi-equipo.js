@@ -247,11 +247,11 @@ exports.reportarParaReparacion = (req, res) => {
   )
 }
 
-// Add this method to show equipment history for the user
+// Agregue este método para mostrar el historial del equipo para el usuario
 exports.mostrarHistorial = (req, res) => {
   const idUsuario = req.session.usuario.id
 
-  // Query to get all equipment ever assigned to this user, including past assignments
+  // Consulta para obtener todo el equipo asignado a este usuario, incluidas las asignaciones anteriores
   const query = `
     SELECT DISTINCT e.*, a.fecha_asignacion, a.fecha_devolucion, a.razon_asignacion, a.estado AS estado_asignacion
     FROM equipos e
@@ -260,7 +260,7 @@ exports.mostrarHistorial = (req, res) => {
     ORDER BY a.fecha_asignacion DESC
   `
 
-  // Execute the query
+  // Ejecutar la consulta para obtener el historial de equipos
   conexion.query(query, [idUsuario], (error, equipos) => {
     if (error) {
       console.error("Error al obtener historial de equipos:", error)
@@ -268,7 +268,7 @@ exports.mostrarHistorial = (req, res) => {
       return res.redirect("/mi-equipo")
     }
 
-    // Get repair history for each equipment
+    // Obtenga el historial de reparaciones de cada equipo
     const equiposConReparaciones = []
     let equiposProcesados = 0
 
@@ -301,7 +301,8 @@ exports.mostrarHistorial = (req, res) => {
         equiposConReparaciones.push(equipo)
 
         if (equiposProcesados === equipos.length) {
-          // Sort by assignment date (newest first)
+          // Este es el lugar donde todos los equipos han sido procesados
+          // Ordenar los equipos por fecha de asignación (más recientes primero)
           equiposConReparaciones.sort((a, b) => new Date(b.fecha_asignacion) - new Date(a.fecha_asignacion))
 
           res.render("mi-equipo/historial", {

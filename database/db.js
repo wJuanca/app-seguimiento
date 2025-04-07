@@ -17,6 +17,6 @@ connection.connect((err) => {
 })
 
 module.exports = connection
-// Agregar esta línea para exportar la versión con promesas
+// Agregar esta linea para exportar la version con promesas
 module.exports.promise = connection.promise()
 

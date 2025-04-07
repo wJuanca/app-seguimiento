@@ -17,7 +17,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 1 semana en milisegundos
+      maxAge: 7 * 24 * 60 * 60 * 1000,
       secure: false,
     },
   }),
@@ -37,13 +37,13 @@ app.use((req, res, next) => {
 app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "views"))
 
-// Servir archivos estáticos
+// Servir archivos estaticos
 app.use(express.static(path.join(__dirname, "public")))
 
-// Middleware para verificar autenticación
+// Middleware para verificar autenticacion
 const { verificarAutenticacion, verificarRol } = require("./middlewares/auth")
 
-// Ruta principal - redirigir al login si no hay sesión
+// Ruta principal - redirigir al login si no hay sesioon
 app.get("/", (req, res) => {
   if (!req.session.usuario) {
     return res.redirect("/auth/login")

@@ -1,5 +1,7 @@
 const conexion = require("../database/db")
 
+
+//Contralador para los reportes
 exports.mostrarReporteInventario = (req, res) => {
   const queries = {
     equipos: `
@@ -54,6 +56,8 @@ exports.mostrarReporteInventario = (req, res) => {
       `,
   }
 
+  // Ejecutar las consultas de forma paralela
+  // y esperar a que todas se completen
   Promise.all([
     queryPromise(queries.equipos),
     queryPromise(queries.resumen),
@@ -90,6 +94,7 @@ function queryPromise(sql) {
   })
 }
 
+// Controlador para mostrar el reporte de asignaciones
 exports.mostrarReporteAsignaciones = (req, res) => {
   const queries = {
     distribucionEquipos: `
@@ -176,6 +181,7 @@ exports.mostrarReporteAsignaciones = (req, res) => {
     })
 }
 
+// Este controlador genera un reporte de mantenimiento de equipos
 exports.mostrarReporteMantenimiento = (req, res) => {
   const queries = {
     flujoReparaciones: `

@@ -170,7 +170,6 @@ exports.verEquipo = (req, res) => {
 exports.editarEquipo = (req, res) => {
   const { nombre, tipo, marca, modelo, numero_serie, estado } = req.body
 
-  // No permitimos cambiar el estado directamente desde aquí
   // Solo actualizamos los campos que el usuario puede editar
   db.query(
     "UPDATE equipos SET nombre = ?, tipo = ?, marca = ?, modelo = ?, numero_serie = ? WHERE id_equipo = ?",

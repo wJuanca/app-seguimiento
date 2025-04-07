@@ -1,3 +1,4 @@
+//Este script se encarga de filtrar las tablas de inventario y mantenimiento
 document.addEventListener('DOMContentLoaded', function() {
     if(typeof page_inventario !== 'undefined' && page_inventario === 'inventario') {
         console.log('inventario');

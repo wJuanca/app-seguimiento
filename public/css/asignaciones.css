@@ -394,7 +394,7 @@ padding-right: 2.5rem
     animation: fadeIn 0.3s ease-in;
 }
 
-/* Media queries para responsividad */
+/* Media queries el responsive */
 @media (max-width: 1200px) {
     .container {
         max-width: 960px;

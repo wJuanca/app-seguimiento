@@ -16,19 +16,19 @@ router.get("/detalles/:id", reparacionController.verDetallesReparacion)
 router.get("/crear", reparacionController.cargarFormularioCrear)
 router.post("/crear", reparacionController.saveReparacion)
 
-// Asignar técnico a una reparación (para administradores)
+// Asignar técnico a una reparacion (para administradores)
 router.post("/asignar-tecnico/:id", reparacionController.asignarTecnico)
 
-// Tomar caso (para técnicos)
+// Tomar caso (para tecnicos)
 router.post("/tomar-caso/:id", reparacionController.tomarCaso)
 
-// Completar reparación
+// Completar reparacion
 router.post("/completar/:id", reparacionController.completarReparacion)
 
-// Descartar reparación
+// Descartar reparacion
 router.post("/descartar/:id", reparacionController.descartarReparacion)
 
-// Editar reparación
+// Editar reparacion
 router.get("/editar/:id", (req, res) => {
   const id_reparacion = req.params.id
   conexion.query("select * from reparaciones where id_reparacion = ?", [id_reparacion], (error, resultado) => {
@@ -43,7 +43,7 @@ router.get("/editar/:id", (req, res) => {
 })
 router.post("/editar", reparacionController.updateReparacion)
 
-// Eliminar reparación
+// Eliminar reparacion
 router.get("/eliminar/:id", (req, res) => {
   const id_reparacion = req.params.id
   conexion.query("select * from reparaciones where id_reparacion = ?", [id_reparacion], (error, resultado) => {
@@ -57,7 +57,7 @@ router.get("/eliminar/:id", (req, res) => {
 })
 router.post("/eliminar", reparacionController.deleteReparacion)
 
-// Ver reparación
+// Ver reparacion
 router.get("/ver/:id", reparacionController.viewReparacion)
 
 module.exports = router

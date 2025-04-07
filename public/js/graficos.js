@@ -58,7 +58,7 @@ new Chart(statusCtx, {
     }
 });
 
-// Gráfico de distribución de equipos por usuario
+// Grafico de distribución de equipos por usuario
 const distributionCtx = document.getElementById('distributionChart').getContext('2d');
 new Chart(distributionCtx, {
     type: 'pie',
@@ -85,7 +85,7 @@ new Chart(distributionCtx, {
     }
 });
 
-// Gráfico de total de equipos asignados
+// Grafico de total de equipos asignados
 const totalEquiposCtx = document.getElementById('totalEquiposChart').getContext('2d');
 new Chart(totalEquiposCtx, {
     type: 'doughnut',
@@ -110,7 +110,7 @@ new Chart(totalEquiposCtx, {
     }
 });
 
-// Gráfico de tendencias de reparaciones
+// Grafico de tendencias de reparaciones
 const tendenciasCtx = document.getElementById('tendenciasChart').getContext('2d');
 new Chart(tendenciasCtx, {
     type: 'line',
