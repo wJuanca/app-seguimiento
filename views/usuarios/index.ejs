@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestión de Usuarios - Sistema de Gestión</title>
+  <title>Gestión de Usuarios - TrakSys</title>
   <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Bootstrap Icons -->
@@ -18,7 +18,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h1 class="mb-0 fs-2">Gestión de Usuarios</h1>
       <a href="/usuarios/crear" class="btn btn-success">
-        <i class="bi bi-person-plus-fill me-2"></i>Crear Usuario
+        <i class="bi bi-person-plus me-2"></i>Nuevo Usuario
       </a>
     </div>
     
@@ -42,7 +42,7 @@
       <div class="card-header bg-white py-3">
         <div class="row align-items-center">
           <div class="col">
-            <h5 class="mb-0">Lista de Usuarios</h5>
+            <h5 class="mb-0">Listado de Usuarios</h5>
           </div>
           <div class="col-auto">
             <div class="input-group">
@@ -62,70 +62,55 @@
                 <th class="ps-3">ID</th>
                 <th>Nombre</th>
                 <th>Correo</th>
-                <th class="d-none d-md-table-cell">Teléfono</th>
-                <th class="d-none d-lg-table-cell">Contraseña</th>
+                <th>Teléfono</th>
                 <th>Rol</th>
-                <th class="d-none d-md-table-cell">Fecha Registro</th>
+                <th>Fecha Registro</th>
                 <th class="text-center">Acciones</th>
               </tr>
             </thead>
             <tbody>
-              <% if (typeof usuarios !== 'undefined' && usuarios.length > 0) { %>
-                <% usuarios.forEach((usuario) => { %>
+              <% if (usuarios && usuarios.length > 0) { %>
+                <% usuarios.forEach(function(usuario) { %>
                   <tr>
                     <td class="ps-3"><%= usuario.id_usuario %></td>
                     <td>
                       <div class="d-flex align-items-center">
                         <div class="avatar-circle bg-primary text-white me-2">
-                          <%= usuario.nombre.charAt(0).toUpperCase() %>
+                          <%= usuario.nombre.charAt(0) %>
                         </div>
-                        <%= usuario.nombre %>
+                        <span><%= usuario.nombre %></span>
                       </div>
                     </td>
                     <td><%= usuario.correo %></td>
-                    <td class="d-none d-md-table-cell"><%= usuario.telefono %></td>
-                    <td class="d-none d-lg-table-cell">********</td>
+                    <td><%= usuario.telefono %></td>
                     <td>
-                      <% 
-                        let badgeClass = '';
-                        let badgeIcon = '';
-                        
-                        if (usuario.rol.toLowerCase() === 'admin') {
-                          badgeClass = 'bg-purple text-white';
-                          badgeIcon = 'shield-lock';
-                        } else if (usuario.rol.toLowerCase() === 'tecnico') {
-                          badgeClass = 'bg-info text-white';
-                          badgeIcon = 'tools';
-                        } else {
-                          badgeClass = 'bg-success text-white';
-                          badgeIcon = 'person';
-                        }
-                      %>
-                      <span class="badge <%= badgeClass %>">
-                        <i class="bi bi-<%= badgeIcon %> me-1"></i>
-                        <%= usuario.rol %>
-                      </span>
+                      <% if (usuario.rol === 'admin') { %>
+                        <span class="badge bg-purple">Administrador</span>
+                      <% } else if (usuario.rol === 'tecnico') { %>
+                        <span class="badge bg-info">Técnico</span>
+                      <% } else { %>
+                        <span class="badge bg-success">Usuario Final</span>
+                      <% } %>
                     </td>
-                    <td class="d-none d-md-table-cell">
-                      <%= usuario.fecha_registro.toISOString().split('T')[0] %>
-                    </td>
+                    <td><%= new Date(usuario.fecha_registro).toLocaleDateString() %></td>
                     <td>
                       <div class="d-flex justify-content-center gap-2">
-                        <a href="/usuarios/ver/<%= usuario.id_usuario %>" class="btn btn-sm btn-outline-primary" title="Ver">
+                        <a href="/usuarios/ver/<%= usuario.id_usuario %>" class="btn btn-sm btn-outline-info" title="Ver">
                           <i class="bi bi-eye"></i>
                         </a>
-                        <% if (usuario && usuario.rol === 'admin') { %>
-                        <a href="/usuarios/editar/<%= usuario.id_usuario %>" class="btn btn-sm btn-outline-warning" title="Editar">
+                        <a href="/usuarios/editar/<%= usuario.id_usuario %>" class="btn btn-sm btn-outline-primary" title="Editar">
                           <i class="bi bi-pencil"></i>
                         </a>
-                        <% } %>
+                        <a href="/usuarios/eliminar/<%= usuario.id_usuario %>" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                          <i class="bi bi-trash"></i>
+                        </a>
                       </div>
                     </td>
                   </tr>
-                <% }) %>
+                <% }); %>
               <% } else { %>
                 <tr>
-                  <td colspan="8" class="text-center py-4">
+                  <td colspan="7" class="text-center py-4">
                     <i class="bi bi-people fs-1 text-muted d-block mb-2"></i>
                     No hay usuarios registrados
                   </td>
@@ -140,7 +125,7 @@
 
   <!-- Bootstrap 5 JS Bundle with Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  
+
   <style>
     .avatar-circle {
       width: 32px;
@@ -156,9 +141,8 @@
       background-color: #6f42c1;
     }
   </style>
-  
+
   <script>
-    // Búsqueda en la tabla
     document.addEventListener('DOMContentLoaded', function() {
       const searchInput = document.getElementById('searchInput');
       const table = document.getElementById('usuariosTable');

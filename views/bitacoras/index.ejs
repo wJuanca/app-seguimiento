@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bitácoras - Sistema de Gestión</title>
+  <title>Bitácoras - TrakSys</title>
   <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Bootstrap Icons -->
@@ -79,30 +79,30 @@
           <% if (bitacoras && bitacoras.length > 0) { %>
             <% bitacoras.forEach(function(bitacora) { %>
               <div class="list-group-item py-3">
-                <div class="d-flex align-items-center">
+                <div class="d-flex">
                   <% 
                     let iconClass = '';
-                    if (bitacora.tipo === 'reparacion') {
+                    if (bitacora.tipo_evento === 'reparacion') {
                       iconClass = 'bi-tools text-warning';
-                    } else if (bitacora.tipo === 'equipo') {
+                    } else if (bitacora.tipo_evento === 'equipo') {
                       iconClass = 'bi-laptop text-primary';
-                    } else if (bitacora.tipo === 'asignacion') {
+                    } else if (bitacora.tipo_evento === 'asignacion') {
                       iconClass = 'bi-people text-info';
                     } else {
                       iconClass = 'bi-activity text-success';
                     }
                   %>
-                  <div class="rounded-circle bg-light p-2 me-3">
+                  <div class="rounded-circle bg-light p-2 me-3" style="min-width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
                     <i class="bi <%= iconClass %> fs-5"></i>
                   </div>
-                  <div>
+                  <div class="ms-0">
                     <h6 class="mb-1"><%= bitacora.descripcion %></h6>
                     <div class="d-flex align-items-center text-muted small">
                       <i class="bi bi-clock me-1"></i>
-                      <span><%= new Date(bitacora.fecha).toLocaleString() %></span>
+                      <span><%= bitacora.fecha_registro ? new Date(bitacora.fecha_registro).toLocaleString() : 'Fecha no disponible' %></span>
                       <span class="mx-2">•</span>
                       <i class="bi bi-person me-1"></i>
-                      <span><%= bitacora.usuario || 'Sistema' %></span>
+                      <span><%= bitacora.nombre_usuario || 'Sistema' %></span>
                     </div>
                   </div>
                 </div>
@@ -130,6 +130,31 @@
     .hover-shadow:hover {
       transform: translateY(-5px);
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .rounded-circle {
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      border-radius: 50% !important;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+    }
+
+    /* Estilos para las actividades */
+    .list-group-item .d-flex {
+      align-items: flex-start;
+      text-align: left;
+    }
+    
+    .list-group-item .rounded-circle {
+      margin: 0;
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
     }
   </style>
 </body>

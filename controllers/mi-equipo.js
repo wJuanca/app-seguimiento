@@ -4,19 +4,21 @@ const conexion = require("../database/db")
 exports.mostrarMisEquipos = (req, res) => {
   const idUsuario = req.session.usuario.id
 
-  // COnsulta para obtener los equipos que fueron asignados al usuario con informacion reparaciones
+  // Consulta para obtener los equipos que fueron asignados al usuario con información de reparaciones y fecha de asignación
   const sql = `
     SELECT e.*, 
          r.id_reparacion, r.estado AS estado_reparacion, r.descripcion_problema, 
          r.fecha_inicio, r.fecha_finalizacion,
-         t.nombre AS nombre_tecnico, t.telefono AS telefono_tecnico
+         t.nombre AS nombre_tecnico, t.telefono AS telefono_tecnico,
+         a.fecha_asignacion, a.razon_asignacion
     FROM equipos e
     LEFT JOIN reparaciones r ON e.id_equipo = r.equipo_id AND r.estado != 'reparado'
     LEFT JOIN usuarios t ON r.tecnico_id = t.id_usuario
+    LEFT JOIN asignaciones a ON e.id_equipo = a.equipo_id AND a.usuario_id = ? AND a.estado = 'activa'
     WHERE e.usuario_actual_id = ?
   `
 
-  conexion.query(sql, [idUsuario], (error, equipos) => {
+  conexion.query(sql, [idUsuario, idUsuario], (error, equipos) => {
     if (error) {
       console.error("Error al obtener equipos del usuario:", error)
       req.flash("error", "Error al cargar tus equipos")
@@ -72,7 +74,7 @@ exports.verDetallesEquipo = (req, res) => {
 
         // Obtener historial de asignaciones
         const queryAsignaciones = `
-          SELECT a.*, u.nombre AS nombre_usuario
+          SELECT a.*, u.nombre AS nombre_usuario, a.razon_asignacion AS motivo
           FROM asignaciones a
           LEFT JOIN usuarios u ON a.usuario_id = u.id_usuario
           WHERE a.equipo_id = ?

@@ -11,8 +11,8 @@ router.get("/detalles/:id", miEquipoController.verDetallesEquipo)
 router.post("/devolver/:id", miEquipoController.devolverEquipo)
 router.post("/reportar/:id", miEquipoController.reportarParaReparacion)
 
-// Temporarily comment out this route until we properly implement the controller method
-// router.get("/historial", auth.verificarUsuario, miEquipoController.mostrarHistorial);
+// Ruta para ver el historial completo
+router.get("/historial", miEquipoController.mostrarHistorial)
 
 module.exports = router
 

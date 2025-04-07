@@ -41,7 +41,6 @@ exports.edit = (req, res) => {
     "UPDATE usuarios SET ? WHERE id_usuario = ?",
     [
       {
-        id_usuario: id_usuario,
         nombre: nombre,
         correo: correo,
         telefono: telefono,
